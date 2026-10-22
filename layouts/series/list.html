@@ -1,0 +1,21 @@
+{{ define "main" }}
+<section class="article">
+  <header class="article-header">
+    <a class="back-link" href="{{ site.Home.RelPermalink }}">← 首页</a>
+    <p class="eyebrow">SERIES ROADMAP · RISC-V</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p class="article-lead">{{ . }}</p>{{ end }}
+  </header>
+
+  {{ with .TableOfContents }}
+    <details class="article-toc" open>
+      <summary>总览目录</summary>
+      {{ . }}
+    </details>
+  {{ end }}
+
+  <div class="article-body">
+    {{ .Content }}
+  </div>
+</section>
+{{ end }}

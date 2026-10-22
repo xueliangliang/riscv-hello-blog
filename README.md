@@ -19,4 +19,4 @@ hugo --minify
 
 生成站点位于 `public/`。本仓库当前测试基线是 Hugo `v0.154.5+extended`；没有 GitHub Actions，构建和部署由维护者手动执行。
 
-文章源文件位于 `content/posts/`，页面模板位于 `layouts/`，样式位于 `static/css/site.css`。`public/` 是可随时重建的产物，不提交到 Git。
+系列路线图源文件位于 `content/series/_index.md`，并通过站点顶部导航访问。文章源文件位于 `content/posts/`，页面模板位于 `layouts/`，样式位于 `static/css/site.css`。`public/` 是可随时重建的产物，不提交到 Git。
