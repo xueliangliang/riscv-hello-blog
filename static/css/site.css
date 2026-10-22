@@ -105,6 +105,13 @@ a:hover { color: var(--accent); }
 .article-body th, .article-body td { padding: 9px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
 .article-body th { background: var(--soft-accent); }
 .article-body img { max-width: 100%; height: auto; }
+.mermaid-diagram { margin: 1.8em 0; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.mermaid-scroll { max-width: 100%; overflow-x: auto; border-radius: 6px; background: #fff; color-scheme: light; }
+.mermaid-scroll a { display: block; min-width: 720px; padding: 12px; }
+.mermaid-scroll img { display: block; width: 100%; }
+.mermaid-diagram figcaption { margin-top: 10px; color: var(--muted); font-size: .82rem; }
+.mermaid-source { margin-top: 10px; font-size: .87rem; }
+.mermaid-source summary { cursor: pointer; color: var(--accent-strong); }
 .article-body hr { margin-block: 2em; border: 0; border-top: 1px solid var(--line); }
 .article-end { margin-top: 48px; padding: 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .article-end p { margin: 0 0 12px; color: var(--muted); }

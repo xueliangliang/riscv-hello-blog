@@ -1,0 +1,22 @@
+{{- $source := strings.TrimSpace .Inner -}}
+{{- $hash := crypto.SHA256 $source -}}
+{{- $path := printf "diagrams/%s.svg" $hash -}}
+{{- if not (os.FileExists (printf "static/%s" $path)) -}}
+  {{- errorf "Mermaid SVG missing for %s: run npm ci && npm run diagrams before Hugo" .Position -}}
+{{- end -}}
+{{- $title := "Mermaid 流程图" -}}
+{{- with findRE `(?m)^\s*accTitle:\s*.+$` $source 1 -}}
+  {{- $title = replaceRE `^\s*accTitle:\s*` "" (index . 0) -}}
+{{- end -}}
+<figure class="mermaid-diagram">
+  <div class="mermaid-scroll" tabindex="0" role="group" aria-label="{{ $title }}，窄屏可横向滚动">
+    <a href="{{ $path | relURL }}" target="_blank" rel="noopener noreferrer" aria-label="打开原尺寸图：{{ $title }}">
+      <img src="{{ $path | relURL }}" alt="{{ $title }}" loading="lazy" decoding="async">
+    </a>
+  </div>
+  <figcaption>{{ $title }} · 点击查看原图，窄屏可横向滚动</figcaption>
+  <details class="mermaid-source">
+    <summary>查看 Mermaid 源码</summary>
+    <pre><code class="language-mermaid">{{ $source }}</code></pre>
+  </details>
+</figure>
