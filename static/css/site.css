@@ -110,6 +110,9 @@ a:hover { color: var(--accent); }
 .article-end p { margin: 0 0 12px; color: var(--muted); }
 .listing-page { max-width: 800px; margin-inline: auto; }
 .listing-page .post-list { margin-top: 24px; }
+.not-found { max-width: 680px; margin: 10vh auto; padding: clamp(28px, 6vw, 58px); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.not-found h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; letter-spacing: -.055em; }
+.not-found > p:not(.eyebrow) { color: var(--muted); }
 .site-footer { border-top: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: .82rem; }
 .footer-inner { display: flex; justify-content: space-between; gap: 12px; padding-block: 18px; }
 
