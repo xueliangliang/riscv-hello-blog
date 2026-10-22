@@ -32,5 +32,7 @@ The initial upload is already present in S3. For later changes, run the build, s
 - ACM certificate for `blog.xueliangliang.dev` is in `us-east-1`.
 - Route 53 `A` and `AAAA` alias records point `blog.xueliangliang.dev` to CloudFront.
 - `infra/cloudfront-directory-index.js` maps Hugo pretty URLs to their `index.html` objects. The distribution returns the generated `/404.html` for missing paths.
+- The `LL` monogram favicon is in `static/favicon.svg` and is reused in the site header.
+- Article comments use giscus with the blog repository's `Announcements` Discussion category and `pathname` mapping; commenters sign in with GitHub.
 
 Do not make the S3 bucket public or change the CloudFront origin to the S3 website endpoint; that would bypass the current OAC setup.

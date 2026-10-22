@@ -1,0 +1,23 @@
+{{ with site.Params.giscus }}
+<section class="comments" aria-labelledby="comments-title">
+  <p class="eyebrow">GITHUB DISCUSSIONS</p>
+  <h2 id="comments-title">讨论</h2>
+  <p class="comments-note">使用 GitHub 账号登录后参与；讨论保存在博客仓库。</p>
+  <div class="giscus"></div>
+  <script src="https://giscus.app/client.js"
+    data-repo="{{ .repo }}"
+    data-repo-id="{{ .repoId }}"
+    data-category="{{ .category }}"
+    data-category-id="{{ .categoryId }}"
+    data-mapping="{{ .mapping | default "pathname" }}"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async></script>
+  <noscript>启用 JavaScript 后即可加载 GitHub Discussions 评论区。</noscript>
+</section>
+{{ end }}

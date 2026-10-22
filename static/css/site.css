@@ -33,8 +33,8 @@ a:hover { color: var(--accent); }
 
 .site-header { border-bottom: 1px solid var(--line); background: var(--surface); }
 .header-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
-.site-brand { color: var(--ink); font-size: 1.02rem; font-weight: 760; letter-spacing: -.035em; text-decoration: none; }
-.brand-mark { color: var(--accent); font-size: 1.5em; }
+.site-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-size: 1.02rem; font-weight: 760; letter-spacing: -.035em; text-decoration: none; }
+.brand-icon { flex: 0 0 auto; border-radius: 9px; box-shadow: 0 3px 10px rgb(16 43 45 / 18%); }
 .site-nav { display: flex; flex-wrap: wrap; gap: 24px; font-size: .88rem; }
 .site-nav a { color: var(--muted); text-decoration: none; }
 .site-nav a:hover { color: var(--accent-strong); }
@@ -108,6 +108,10 @@ a:hover { color: var(--accent); }
 .article-body hr { margin-block: 2em; border: 0; border-top: 1px solid var(--line); }
 .article-end { margin-top: 48px; padding: 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .article-end p { margin: 0 0 12px; color: var(--muted); }
+.comments { width: min(780px, 100%); margin: 48px auto 0; padding-top: 30px; border-top: 1px solid var(--line); }
+.comments h2 { margin: 0; font-size: 1.45rem; letter-spacing: -.04em; }
+.comments-note { margin: 6px 0 18px; color: var(--muted); font-size: .88rem; }
+.giscus { min-height: 120px; }
 .listing-page { max-width: 800px; margin-inline: auto; }
 .listing-page .post-list { margin-top: 24px; }
 .not-found { max-width: 680px; margin: 10vh auto; padding: clamp(28px, 6vw, 58px); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }

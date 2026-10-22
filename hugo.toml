@@ -12,6 +12,13 @@ author = "Xue Liangliang"
 codeRepositoryURL = "https://github.com/xueliangliang/riscv-hello"
 blogRepositoryURL = "https://github.com/xueliangliang/riscv-hello-blog"
 
+[params.giscus]
+repo = "xueliangliang/riscv-hello-blog"
+repoId = "R_kgDOVTFrlg"
+category = "Announcements"
+categoryId = "DIC_kwDOVTFrls4DJU3f"
+mapping = "pathname"
+
 [permalinks]
 posts = "/posts/:slug/"
 
