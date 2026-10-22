@@ -99,10 +99,10 @@ Ubuntu 官方包目录可核对本文用到的 [`gcc-riscv64-linux-gnu`](https:/
 ```sh
 git clone https://github.com/xueliangliang/riscv-hello.git
 cd riscv-hello
-git checkout 5d06f020940a8e231cf0e3d61d0043f07b101a2f
+git checkout lesson-01
 ```
 
-本篇对应代码提交是 `5d06f020940a8e231cf0e3d61d0043f07b101a2f`。作者本机的代码目录是 `~/riscv-hello-clean`；读者应使用前面的 clone 命令和仓库内相对路径，不需要复用作者的本地目录名。
+本篇对应代码标签是 `lesson-01`，固定在提交 `2dd2519298a68c6ca55bf87193505f2cea870c3b`。后续课程会继续累积在 `main`；这个标签不随 `main` 前进而改变。检出标签时 Git 会提示进入 detached HEAD，这是只读复现实验的正常状态；若要在此基础上修改，先运行 `git switch -c my-lesson-01-experiment`。作者本机的代码目录是 `~/riscv-hello-clean`；读者应使用前面的 clone 命令和仓库内相对路径，不需要复用作者的本地目录名。
 
 ## 构建：宿主机 GCC 与目标 GCC 不是一回事
 
@@ -236,7 +236,8 @@ info registers pc a0 a1
 ## 代码版本
 
 - 代码仓库：`https://github.com/xueliangliang/riscv-hello`
-- 对应提交：`5d06f020940a8e231cf0e3d61d0043f07b101a2f`
+- 对应标签：`lesson-01`
+- 对应提交：`2dd2519298a68c6ca55bf87193505f2cea870c3b`
 
 ## 官方参考
 
