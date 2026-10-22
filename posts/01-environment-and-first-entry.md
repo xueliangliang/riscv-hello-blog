@@ -102,7 +102,7 @@ cd riscv-hello
 git checkout 5d06f020940a8e231cf0e3d61d0043f07b101a2f
 ```
 
-本篇对应代码提交是 `5d06f020940a8e231cf0e3d61d0043f07b101a2f`。也可以在作者的机器上使用 `/home/liangliang/riscv-hello-clean`，但读者不应依赖这个机器专属路径。
+本篇对应代码提交是 `5d06f020940a8e231cf0e3d61d0043f07b101a2f`。作者本机的代码目录是 `~/riscv-hello-clean`；读者应使用前面的 clone 命令和仓库内相对路径，不需要复用作者的本地目录名。
 
 ## 构建：宿主机 GCC 与目标 GCC 不是一回事
 
