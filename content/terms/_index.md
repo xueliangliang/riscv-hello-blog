@@ -121,6 +121,18 @@ System call（syscall，系统调用）：用户程序请求内核服务的受�
 
 背景：[Wikipedia：System call](https://en.wikipedia.org/wiki/System_call)；本系列第 05 课的接口见代码仓库 `lessons/05/abi.h` 和该课 README。
 
+### interrupt
+
+Interrupt（中断）：相对于当前普通指令流异步发生的事件，在挂起、使能、委托与特权条件满足时进入处理入口。中断处理后可以恢复原程序，也可以在调度器决策后运行其他任务；两者不是同一概念。第 06 课先只演示恢复同一条程序流。
+
+背景：[Wikipedia：Interrupt](https://en.wikipedia.org/wiki/Interrupt)；规范见 [RISC-V Supervisor-Level ISA](https://docs.riscv.org/reference/isa/v20260120/priv/supervisor.html)。
+
+### Sstc
+
+RISC-V Supervisor-mode Timer Interrupts 扩展，名称中的 Ss 表示监管者级扩展，tc 来自 timecmp。它允许监管者模式通过 `stimecmp` 管理定时器比较值；是否可访问，还取决于机器模式的授权。它不是外部设备中断控制器，也不是一个调度器。
+
+规范：[RISC-V Sstc 1.0](https://docs.riscv.org/reference/isa/v20260120/priv/sstc.html)。
+
 ### heap
 
 Heap（堆）：用于动态分配对象的一块内存。本系列第 05 课先做 bump allocator（顺序推进分配器），按对齐后的请求大小向前移动游标；容量固定、失败不消耗空间、不支持释放。它在用户态操作已预留内存，不是向内核申请新页的系统调用。
