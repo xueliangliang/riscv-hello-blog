@@ -1,0 +1,46 @@
+{{ define "main" }}
+<section class="hero">
+  <p class="eyebrow">BARE METAL · RISC-V · SYSTEMS</p>
+  <h1>从第一条指令开始。</h1>
+  <p class="hero-copy">一边动手，一边把 RISC-V 裸机与操作系统的每一步讲清楚。每篇实验都配有可复现的代码版本和验证方法。</p>
+  <a class="hero-link" href="{{ "posts/environment-and-first-entry/" | relURL }}">从第一课开始 <span aria-hidden="true">→</span></a>
+  <div class="hero-index" aria-hidden="true">RV64<br>LAB NOTES</div>
+</section>
+
+<section class="post-section" aria-labelledby="posts-heading">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">FIELD NOTES</p>
+      <h2 id="posts-heading">课程与文章</h2>
+    </div>
+    {{ $posts := where site.RegularPages "Section" "posts" }}
+    <span class="post-count">{{ len $posts }} 篇</span>
+  </div>
+
+  <div class="post-list">
+    {{ range $posts.ByDate.Reverse }}
+      <article class="post-card">
+        <div class="post-card-meta">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+          <span>实验记录</span>
+        </div>
+        <h3><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h3>
+        {{ with .Description }}<p>{{ . }}</p>{{ end }}
+        {{ with .Params.tags }}
+          <ul class="tag-list" aria-label="文章标签">
+            {{ range . }}<li>{{ . }}</li>{{ end }}
+          </ul>
+        {{ end }}
+      </article>
+    {{ else }}
+      <p class="empty-state">第一篇实验记录正在整理中。</p>
+    {{ end }}
+  </div>
+</section>
+
+<section class="principles">
+  <p class="eyebrow">REPRODUCIBLE BY DESIGN</p>
+  <h2>不只展示结果，也记录怎么得到结果。</h2>
+  <p>文章保留实验环境、构建命令、预期输出和边界说明；代码仓库按课程标签固定版本，让读者可以回到对应实验状态。</p>
+</section>
+{{ end }}

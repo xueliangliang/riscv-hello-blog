@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{ site.Language.Lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  {{ $description := .Description | default site.Params.description }}
+  <meta name="description" content="{{ $description }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ "index.xml" | relURL }}">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="site-shell header-inner">
+      <a class="site-brand" href="{{ site.Home.RelPermalink }}">{{ site.Title }}<span class="brand-mark">.</span></a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="{{ site.Home.RelPermalink }}">文章</a>
+        <a href="{{ site.Params.codeRepositoryURL }}" target="_blank" rel="noopener noreferrer">代码仓库 ↗</a>
+        <a href="{{ site.Params.blogRepositoryURL }}" target="_blank" rel="noopener noreferrer">文章源码 ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="site-shell site-main">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-shell footer-inner">
+      <span>© {{ now.Format "2006" }} {{ site.Params.author }}</span>
+      <span>用 Hugo 构建 · 源码公开在 GitHub</span>
+    </div>
+  </footer>
+</body>
+</html>

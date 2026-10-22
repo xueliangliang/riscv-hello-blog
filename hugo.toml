@@ -1,0 +1,27 @@
+baseURL = "https://blog.xueliangliang.dev/"
+languageCode = "zh-CN"
+defaultContentLanguage = "zh-cn"
+title = "RISC-V 实验笔记"
+enableRobotsTXT = true
+hasCJKLanguage = true
+summaryLength = 80
+
+[params]
+description = "从第一条指令开始，记录 RISC-V 裸机与操作系统实验。"
+author = "Xue Liangliang"
+codeRepositoryURL = "https://github.com/xueliangliang/riscv-hello"
+blogRepositoryURL = "https://github.com/xueliangliang/riscv-hello-blog"
+
+[permalinks]
+posts = "/posts/:slug/"
+
+[taxonomies]
+tag = "tags"
+
+[markup.goldmark.renderer]
+unsafe = false
+
+[markup.highlight]
+style = "github"
+noClasses = true
+lineNos = false

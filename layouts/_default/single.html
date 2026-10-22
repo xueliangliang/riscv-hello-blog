@@ -1,0 +1,30 @@
+{{ define "main" }}
+<article class="article">
+  <header class="article-header">
+    <a class="back-link" href="{{ site.Home.RelPermalink }}">← 所有文章</a>
+    <p class="eyebrow">FIELD NOTE · RISC-V</p>
+    <h1>{{ .Title }}</h1>
+    <div class="article-meta">
+      <time datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+      <span>约 {{ .ReadingTime }} 分钟阅读</span>
+    </div>
+    {{ with .Description }}<p class="article-lead">{{ . }}</p>{{ end }}
+  </header>
+
+  {{ with .TableOfContents }}
+    <details class="article-toc" open>
+      <summary>本篇目录</summary>
+      {{ . }}
+    </details>
+  {{ end }}
+
+  <div class="article-body">
+    {{ .Content }}
+  </div>
+
+  <footer class="article-end">
+    <p>本篇代码版本已在文末固定。可从对应标签复现实验，也欢迎反馈文章勘误。</p>
+    <a class="back-link" href="{{ site.Home.RelPermalink }}">返回文章列表 ↑</a>
+  </footer>
+</article>
+{{ end }}

@@ -1,6 +1,12 @@
-# 一条命令背后：搭建 RISC-V 实验环境，并进入第一条指令
++++
+title = "一条命令背后：搭建 RISC-V 实验环境，并进入第一条指令"
+date = 2026-10-22T00:00:00+08:00
+description = "用 Ubuntu 交叉工具链和 QEMU virt，从 ELF 入口进入 RISC-V M-mode，并输出第一行 UART。"
+slug = "environment-and-first-entry"
+tags = ["RISC-V", "QEMU", "裸机"]
++++
 
-> 本篇对应代码：`xueliangliang/riscv-hello` 的 Lesson 01。复现时请 checkout 文末记录的代码 commit，而不只是盲目跟随 `main`。
+> 本篇对应代码：`xueliangliang/riscv-hello` 的 `lesson-01` 标签。复现时请检出该标签，而不是盲目跟随后续变化的 `main`。
 
 ## 这篇要得到什么
 
