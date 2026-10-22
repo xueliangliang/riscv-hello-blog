@@ -12,10 +12,10 @@ tags = ["RISC-V", "QEMU", "裸机"]
 
 我们先不写操作系统，也不假装已经有 `main`、C 运行库或 shell。本篇只完成一个很小但可验证的闭环：
 
-1. 在 x86-64 Ubuntu 主机上用交叉工具链构建 64 位 RISC-V ELF；
+1. 在 x86-64 Ubuntu 主机上用交叉工具链构建 64 位 RISC-V [可执行与可链接格式（Executable and Linkable Format，ELF）](/terms/#elf)文件；
 2. 从 ELF 头和程序段里确认目标架构、入口地址与加载地址；
-3. 用 QEMU 的 RISC-V `virt` 虚拟板加载这个 ELF；
-4. 从 `_start` 轮询 UART，输出一行文字，再让 QEMU 正常结束。
+3. 用 [QEMU（Quick Emulator，快速仿真器）](/terms/#qemu) 的 RISC-V `virt` 虚拟板加载这个 ELF；
+4. 从 `_start` 轮询[通用异步收发器（Universal Asynchronous Receiver-Transmitter，UART）](/terms/#uart)，输出一行文字，再让 QEMU 正常结束。
 
 预期串口输出：
 
@@ -34,15 +34,15 @@ PASS: RISC-V ELF entry and UART output verified.
 
 | 项目 | 实测版本/配置 |
 |---|---|
-| 主机 | x86-64，Ubuntu 26.04.1 LTS（Resolute Raccoon） |
+| 主机 | x86-64，Ubuntu 26.04.1 [LTS（Long-Term Support，长期支持）](/terms/#lts)（Resolute Raccoon） |
 | Linux kernel | 7.0.0-38-generic |
-| RISC-V GNU cross GCC | 15.2.0 (`gcc-riscv64-linux-gnu` 4:15.2.0-5ubuntu1) |
+| RISC-V GNU [Compiler Collection（GCC）](/terms/#gcc) cross compiler | 15.2.0 (`gcc-riscv64-linux-gnu` 4:15.2.0-5ubuntu1) |
 | RISC-V GNU binutils | 2.46 (`binutils-riscv64-linux-gnu` 2.46-3ubuntu2) |
 | GNU Make | 4.4.1 (`make` 4.4.1-3) |
 | QEMU system emulator | 10.2.1 (`qemu-system-misc` 1:10.2.1+ds-1ubuntu3.2) |
-| GDB | 17.1 (`gdb-multiarch` 17.1-2ubuntu1；可选调试工具) |
-| 虚拟机 | QEMU `virt`，单 hart，128 MiB RAM，M-mode 入口 |
-| 目标 ISA/ABI | `rv64imac_zicsr_zifencei` / `lp64`；不用浮点扩展 |
+| GDB | [GNU 调试器（GNU Debugger，GDB）](/terms/#gdb) 17.1（可选） |
+| 虚拟机 | QEMU `virt`，单 hart，128 MiB [随机存取存储器（Random-Access Memory，RAM）](/terms/#ram)，[机器模式（Machine mode，M-mode）](/terms/#m-mode) 入口 |
+| 目标 [指令集架构（Instruction Set Architecture，ISA）](/terms/#isa) / [应用二进制接口（Application Binary Interface，ABI）](/terms/#abi) | `rv64imac_zicsr_zifencei` / `lp64`；不用浮点扩展 |
 
 版本记录的目的，是让读者和读者的 coding agent 能区分“本篇实际验证过的环境”与“理论上也许可用的环境”。本机使用 `python3` 是可选的辅助工具，本篇 Makefile 和 QEMU 测试不依赖 Python。
 
@@ -148,7 +148,7 @@ make inspect
 
 - `Machine` 应该是 RISC-V；
 - Entry point 应为 `0x80000000`；
-- 有可加载的 `PT_LOAD` 程序段，地址从 `0x80000000` 开始；
+- 有可加载的 ELF 程序段类型 [`PT_LOAD`](/terms/#pt_load)，地址从 `0x80000000` 开始；
 - `.text.init` 中 `_start` 是第一段要执行的代码；
 - `.rodata` 里有串口输出字符串；
 - ELF 带符号和调试信息，适合 `readelf`/`objdump`/GDB 检查。
@@ -178,7 +178,7 @@ qemu-system-riscv64 \
   -no-reboot
 ```
 
-`virt` 是 QEMU 提供的虚拟硬件模型，不是某一款真实板卡。QEMU 官方说明 `-bios none` 不加载外置固件；机器仍有内建 reset ROM。QEMU v10.2.1 的 RISC-V reset stub 在 `0x1000` 取出启动地址并跳转；本配置的 DRAM 起始地址和 ELF 入口均为 `0x80000000`。我们用 GDB 实测在 `_start` 命中 `PC=0x80000000`。这个 stub 属于模拟器启动机制，不是本课自己写的固件。代码从 M-mode `_start` 执行，不代表它已能从任意芯片 reset vector 启动。QEMU `virt` 提供兼容 16550 的 UART 和 SiFive test device；本课直接用它们做最小输出和自动退出。参考 v10.2.1 的 [`virt.c` 内存映射](https://github.com/qemu/qemu/blob/v10.2.1/hw/riscv/virt.c)、[reset stub](https://github.com/qemu/qemu/blob/v10.2.1/hw/riscv/boot.c) 和 [SiFive test device](https://github.com/qemu/qemu/blob/v10.2.1/hw/misc/sifive_test.c)。
+`virt` 是 QEMU 提供的虚拟硬件模型，不是某一款真实板卡。QEMU 官方说明 `-bios none` 不加载外置固件；机器仍有内建 reset [只读存储器（Read-Only Memory，ROM）](/terms/#rom)。QEMU v10.2.1 的 RISC-V reset stub 在 `0x1000` 取出启动地址并跳转；本配置的[动态随机存取存储器（Dynamic Random-Access Memory，DRAM）](/terms/#dram)起始地址和 ELF 入口均为 `0x80000000`。我们用 GDB 实测在 `_start` 命中[程序计数器（Program Counter，PC）](/terms/#pc)值 `0x80000000`。这个 stub 属于模拟器启动机制，不是本课自己写的固件。代码从 M-mode `_start` 执行，不代表它已能从任意芯片 reset vector 启动。QEMU `virt` 提供兼容 16550 的 UART 和 SiFive test device；本课直接用它们做最小输出和自动退出。参考 v10.2.1 的 [`virt.c` 内存映射](https://github.com/qemu/qemu/blob/v10.2.1/hw/riscv/virt.c)、[reset stub](https://github.com/qemu/qemu/blob/v10.2.1/hw/riscv/boot.c) 和 [SiFive test device](https://github.com/qemu/qemu/blob/v10.2.1/hw/misc/sifive_test.c)。
 
 Makefile 自动化测试会确认 ELF 架构/入口、捕获 UART 文本、检查 guest test-device 正常退出。执行 `make test` 后应看到：
 
@@ -191,9 +191,9 @@ PASS: RISC-V ELF entry and UART output verified.
 
 ## 代码逐步做了什么
 
-`start.S` 的 `_start` 使用 PC-relative `la` 找到字符串，用 `0x10000000` 作为本课固定的 QEMU virt UART0 地址，然后轮询 UART line-status register 的 transmit-holding-register-empty 位。只有发送器可接收时才写 THR；写完整个字符串后，把通过码写到 `0x00100000` 的 QEMU test device，使自动化测试能够正常结束。
+`start.S` 的 `_start` 使用 PC-relative `la` 找到字符串，用 `0x10000000` 作为本课固定的 QEMU virt UART0 地址，然后轮询 UART 的[线路状态寄存器（Line Status Register，LSR）](/terms/#lsr)中的 transmit-holding-register-empty 位。只有发送器可接收时才写[发送保持寄存器（Transmit Holding Register，THR）](/terms/#thr)；写完整个字符串后，把通过码写到 `0x00100000` 的 QEMU test device，使自动化测试能够正常结束。
 
-`linker.ld` 把 ELF 的单个 RX `PT_LOAD` 程序段放到 `0x80000000`，并把入口符号设为 `_start`。本课只包含汇编入口和串口输出；下一课会加入栈/BSS 初始化、分离的 ELF 段和 C `main`。
+`linker.ld` 把 ELF 的单个 RX `PT_LOAD` 程序段放到 `0x80000000`，并把入口符号设为 `_start`。本课只包含汇编入口和串口输出；下一课会加入栈/[BSS（Block Started by Symbol，零初始化数据区）](/terms/#bss)初始化、分离的 ELF 段和 C `main`。
 
 这些地址和 UART 寄存器行为来自 QEMU `virt` 平台，不是 RISC-V ISA 对所有开发板规定的通用地址。后续换真实板时必须重新核对该板的内存映射、UART 类型、时钟与 pinmux，不能把 `0x10000000` 写死为 RISC-V 通用常量。
 
@@ -225,7 +225,7 @@ x/8i $pc
 info registers pc a0 a1
 ```
 
-此时可以看到 CPU 到达 `_start` 的 ELF 地址。退出 GDB 后用 Ctrl-C 结束被暂停的 QEMU。
+此时可以看到[中央处理器（Central Processing Unit，CPU）](/terms/#cpu)到达 `_start` 的 ELF 地址。退出 GDB 后用 Ctrl-C 结束被暂停的 QEMU。
 
 ## 本课验收
 

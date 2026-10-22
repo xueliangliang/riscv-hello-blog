@@ -10,9 +10,9 @@ tags = ["RISC-V", "QEMU", "bootloader", "virtio"]
 
 ## 为什么还要自己读盘
 
-前两课把一个 ELF 交给 QEMU 的 `-kernel`，由模拟器把它加载到内存。实际系统的启动链通常还需要代码从某种存储设备找到后续镜像、搬到 RAM，再把控制权交出去。
+前两课把一个[可执行与可链接格式（Executable and Linkable Format，ELF）](/terms/#elf)文件交给[QEMU（Quick Emulator，快速仿真器）](/terms/#qemu) 的 `-kernel`，由模拟器把它加载到内存。实际系统的启动链通常还需要代码从某种存储设备找到后续镜像、搬到[随机存取存储器（Random-Access Memory，RAM）](/terms/#ram)，再把控制权交出去。
 
-本篇让 QEMU 继续负责加载**第一阶段 bootloader ELF**，但 kernel 和 shell payload 不再由 `-kernel` 加载：它们被放进一张 raw 磁盘镜像，bootloader 通过 virtio block 读取，再交给 kernel。启动链变为：
+本篇让 QEMU 继续负责加载**第一阶段 bootloader ELF**，但 kernel 和 shell payload 不再由 `-kernel` 加载：它们被放进一张 raw 磁盘镜像，bootloader 通过 [Virtual I/O Device（VIRTIO，虚拟 I/O 设备接口）](/terms/#virtio)读取，再交给 kernel。磁盘位置用[逻辑块寻址（Logical Block Addressing，LBA）](/terms/#lba)编号。启动链变为：
 
 ```text
 QEMU reset stub
@@ -33,16 +33,16 @@ kernel entry → shell payload
 
 | 项目 | 实测版本/配置 |
 |---|---|
-| 主机 | x86-64，Ubuntu 26.04.1 LTS |
+| 主机 | x86-64，Ubuntu 26.04.1 [LTS（Long-Term Support，长期支持）](/terms/#lts) |
 | Linux kernel | 7.0.0-38-generic |
-| RISC-V GNU cross GCC | 15.2.0 |
+| RISC-V GNU [Compiler Collection（GCC）](/terms/#gcc) cross compiler | 15.2.0 |
 | RISC-V GNU binutils | 2.46 |
 | GNU Make | 4.4.1 |
 | QEMU system emulator | 10.2.1 |
 | Python | 3.14.7，仅用标准库 |
-| GDB | 17.1，可选，用于检查 LBA、RAM 地址和跳转 |
-| 虚拟机 | QEMU `virt`，单 hart，128 MiB RAM，M-mode |
-| 目标 ISA/ABI | `rv64imac_zicsr_zifencei` / `lp64`，不启用浮点扩展 |
+| [GNU 调试器（GNU Debugger，GDB）](/terms/#gdb) | 17.1，可选，用于检查 LBA、RAM 地址和跳转 |
+| 虚拟机 | QEMU `virt`，单 hart，128 MiB RAM，[机器模式（Machine mode，M-mode）](/terms/#m-mode) |
+| [指令集架构（Instruction Set Architecture，ISA）](/terms/#isa) / [应用二进制接口（Application Binary Interface，ABI）](/terms/#abi) | `rv64imac_zicsr_zifencei` / `lp64`，不启用浮点扩展 |
 
 安装依赖：
 
@@ -111,13 +111,13 @@ RAM 中的三个固定位置：
 0x80400000  shell payload，bootloader 从 LBA 10 装载
 ```
 
-镜像生成器 `tools/make-disk-image.py` 使用 little-endian 格式写启动记录。布局是 `8s + 2×u32 + 8×u64 = 80` 字节，包含 magic、版本、记录大小、kernel 的 LBA/字节数/加载地址/入口，以及 shell 的同一组字段。启动记录没有 CRC；bootloader 会检查 magic、版本、字段范围、固定 RAM 地址、镜像扇区是否连续，以及这些扇区是否超出设备容量。
+镜像生成器 `tools/make-disk-image.py` 使用 little-endian 格式写启动记录。布局是 `8s + 2×u32 + 8×u64 = 80` 字节，包含 magic、版本、记录大小、kernel 的 LBA/字节数/加载地址/入口，以及 shell 的同一组字段。启动记录没有[循环冗余校验（Cyclic Redundancy Check，CRC）](/terms/#crc)；bootloader 会检查 magic、版本、字段范围、固定 RAM 地址、镜像扇区是否连续，以及这些扇区是否超出设备容量。
 
-加载地址刻意固定在 kernel 和 shell 的链接地址。bootloader 读取每个镜像覆盖的完整扇区，最后一个扇区的 padding 不属于逻辑文件大小；kernel 自己的入口会清理它的 BSS。
+加载地址刻意固定在 kernel 和 shell 的链接地址。bootloader 读取每个镜像覆盖的完整扇区，最后一个扇区的 padding 不属于逻辑文件大小；kernel 自己的入口会清理 [BSS（Block Started by Symbol，零初始化数据区）](/terms/#bss)。
 
-## 为什么需要选择 modern virtio-mmio
+## 为什么需要选择 modern VirtIO transport
 
-本课 driver 实现的是 virtio-mmio Version 2：它扫描 QEMU `virt` 的 MMIO transport，匹配 magic/version/block device ID，协商 `VIRTIO_F_VERSION_1`，配置一个 8-entry split virtqueue，然后轮询完成状态。
+本课 driver 实现的是 VirtIO Version 2 transport。[内存映射 I/O（Memory-Mapped I/O，MMIO）](/terms/#mmio)把设备寄存器映射到地址空间；本课使用的 VirtIO MMIO transport 通常称为 virtio-mmio。driver 扫描 QEMU `virt` 的设备窗口，匹配 magic/version/block device ID，协商 `VIRTIO_F_VERSION_1`，配置一个 8-entry split virtqueue，然后轮询完成状态。
 
 QEMU 的 virtio-mmio transport 在本地配置下默认会暴露 legacy Version 1。作者用 GDB 直接读取 MMIO 寄存器时，未加参数看到设备版本为 1，因此测试命令显式使用：
 
@@ -133,7 +133,7 @@ QEMU 的 virtio-mmio transport 在本地配置下默认会暴露 legacy Version 
 2. 设备写入 guest RAM 的 512 字节数据缓冲区；
 3. 设备写回的请求状态字节。
 
-CPU 把描述符链放入 available ring，执行内存 fence，更新 ring index 并通知 queue 0；之后轮询 used ring，检查完成项和状态码。没有中断，也没有并行队列。两张 payload 共 18 个 sector，超过 8 项 queue 的长度，因此这次运行也实际经过了队列 ring 回绕。
+[中央处理器（Central Processing Unit，CPU）](/terms/#cpu)把描述符链放入 available ring，执行内存 fence，更新 ring index 并通知 queue 0；之后轮询 used ring，检查完成项和状态码。没有中断，也没有并行队列。两张 payload 共 18 个 sector，超过 8 项 queue 的长度，因此这次运行也实际经过了队列 ring 回绕。
 
 ## 运行正常和错误路径
 
@@ -212,7 +212,7 @@ continue
 info registers pc
 ```
 
-本次实测的三个断点分别显示：
+本次实测的三个断点分别显示；最后一行的[程序计数器（Program Counter，PC）](/terms/#pc)用于确认 kernel 收到控制权时的入口地址：
 
 ```text
 kernel: a0/LBA=1,  a1/bytes=4360, a2/destination=0x80200000
@@ -231,9 +231,9 @@ kernel entry: PC=0x80200000
 - 18 个 sector 的两张 payload 被分别放到 linker script 指定的 RAM 地址；
 - kernel 接手后调用磁盘中的 shell payload；
 - 损坏的启动记录 magic 被拒绝；
-- 终端 PTY 下完整 `make test` 不挂起。
+- [伪终端（Pseudoterminal，PTY）](/terms/#pty)下完整 `make test` 不挂起。
 
-这不是生产级 bootloader：它只支持本课固定布局、固定地址和 QEMU virtio-mmio；没有分区表、文件系统、校验和、重定位、超时恢复或中断驱动，也没有进入 S/U-mode。启动记录边界错误、virtio 初始化错误等拒绝分支存在于实现中，但本篇自动化负向测试只专门验证了坏 magic。
+这不是生产级 bootloader：它只支持本课固定布局、固定地址和 QEMU virtio-mmio；没有分区表、文件系统、校验和、重定位、超时恢复或中断驱动，也没有进入[监管者模式（Supervisor mode，S-mode）](/terms/#s-mode)/[用户模式（User mode，U-mode）](/terms/#u-mode)。启动记录边界错误、virtio 初始化错误等拒绝分支存在于实现中，但本篇自动化负向测试只专门验证了坏 magic。
 
 ## 代码版本
 

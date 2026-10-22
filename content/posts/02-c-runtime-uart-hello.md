@@ -10,12 +10,12 @@ tags = ["RISC-V", "QEMU", "裸机", "C 运行时"]
 
 ## 本篇要解决什么
 
-第一课已经证明 QEMU 能进入我们链接在 `0x80000000` 的 `_start`，并且汇编可以直接写 UART。现在再回答一个问题：**C 函数开始运行之前，谁准备它依赖的环境？**
+第一课已经证明 [QEMU（Quick Emulator，快速仿真器）](/terms/#qemu) 能进入我们链接在 `0x80000000` 的 `_start`，并且汇编可以直接写[通用异步收发器（Universal Asynchronous Receiver-Transmitter，UART）](/terms/#uart)。现在再回答一个问题：**C 函数开始运行之前，谁准备它依赖的环境？**
 
 本篇只增加一层很薄的 freestanding C 运行环境：
 
-1. 启动汇编设置 `gp` 和 `sp`；
-2. 按 linker script 提供的范围清零 BSS；
+1. 启动汇编设置[全局指针（global pointer，`gp`）](/terms/#gp)和[栈指针（stack pointer，`sp`）](/terms/#sp)；
+2. 按 linker script 提供的范围清零 [BSS（Block Started by Symbol，零初始化数据区）](/terms/#bss)；
 3. 调用 C 的 `main`；
 4. C 代码检查栈、BSS 和已初始化数据，再经轮询 UART 输出结果。
 
@@ -32,7 +32,7 @@ PASS: BSS was cleared and initialized data was preserved.
 PASS: C runtime, stack, BSS, initialized data, and UART verified.
 ```
 
-这仍不是操作系统，也不是完整 libc。没有特权级切换、trap、中断、调度、文件系统或 `printf`；UART 驱动仍由 C 代码直接访问 QEMU 的 MMIO 地址。
+这仍不是操作系统，也不是完整 libc。没有特权级切换、trap、中断、调度、文件系统或 `printf`；UART 驱动仍由 C 代码直接访问 QEMU 的[内存映射 I/O（Memory-Mapped I/O，MMIO）](/terms/#mmio)地址。
 
 ## 实验环境
 
@@ -40,15 +40,15 @@ PASS: C runtime, stack, BSS, initialized data, and UART verified.
 
 | 项目 | 实测版本/配置 |
 |---|---|
-| 主机 | x86-64，Ubuntu 26.04.1 LTS |
+| 主机 | x86-64，Ubuntu 26.04.1 [LTS（Long-Term Support，长期支持）](/terms/#lts) |
 | Linux kernel | 7.0.0-38-generic |
-| RISC-V GNU cross GCC | 15.2.0 |
+| RISC-V GNU [Compiler Collection（GCC）](/terms/#gcc) cross compiler | 15.2.0 |
 | RISC-V GNU binutils | 2.46 |
 | GNU Make | 4.4.1 |
 | QEMU system emulator | 10.2.1 |
-| GDB | 17.1（可选，本篇用来检查入口与 `main`） |
-| 虚拟机 | QEMU `virt`，单 hart，128 MiB RAM，M-mode |
-| 目标 ISA/ABI | `rv64imac_zicsr_zifencei` / `lp64`，不启用浮点扩展 |
+| [GNU 调试器（GNU Debugger，GDB）](/terms/#gdb) | 17.1（可选，本篇用来检查入口与 `main`） |
+| 虚拟机 | QEMU `virt`，单 hart，128 MiB [随机存取存储器（Random-Access Memory，RAM）](/terms/#ram)，[机器模式（Machine mode，M-mode）](/terms/#m-mode) |
+| [指令集架构（Instruction Set Architecture，ISA）](/terms/#isa) / [应用二进制接口（Application Binary Interface，ABI）](/terms/#abi) | `rv64imac_zicsr_zifencei` / `lp64`，不启用浮点扩展 |
 
 安装与第一课相同的基础软件包：
 
@@ -64,7 +64,7 @@ sudo apt install \
 sudo apt install gdb-multiarch
 ```
 
-发行版包版本会随时间变化；表格记录的是本篇实际测试基线，不是对所有 Ubuntu 版本的承诺。第一课的环境和 ELF 背景见[上一篇](/posts/environment-and-first-entry/)。
+发行版包版本会随时间变化；表格记录的是本篇实际测试基线，不是对所有 Ubuntu 版本的承诺。第一课的环境和[可执行与可链接格式（Executable and Linkable Format，ELF）](/terms/#elf)背景见[上一篇](/posts/environment-and-first-entry/)。
 
 ## 取得这篇对应的代码
 
@@ -90,7 +90,7 @@ make clean all
 make inspect
 ```
 
-`make clean all` 会构建第一课和第二课。检查 `build/lesson02.elf` 时，重点看入口和三个 `PT_LOAD` 段：
+`make clean all` 会构建第一课和第二课。检查 `build/lesson02.elf` 时，重点看入口和三个 ELF 可装载程序段类型 [`PT_LOAD`](/terms/#pt_load)：
 
 ```text
 Entry point address: 0x80000000
@@ -99,7 +99,7 @@ LOAD  ... 0x0000000080001000 ... R
 LOAD  ... 0x0000000080002000 ... RW
 ```
 
-本次 GCC 15.2.0 构建中，最后一个段的 `FileSiz` 是 4 字节，而 `MemSiz` 是 `0x4020` 字节。前者包含已初始化数据；更大的内存范围还覆盖 BSS 和 16 KiB 栈。`.text`、只读数据和可写数据分开，ELF 没有把代码段标成 RWX。ELF 标志本身只是装载信息；这时还没有 PMP 或页表来强制运行时的 W^X 权限。
+本次 GCC 15.2.0 构建中，最后一个段的 `FileSiz` 是 4 字节，而 `MemSiz` 是 `0x4020` 字节。前者包含已初始化数据；更大的内存范围还覆盖 BSS 和 16 KiB 栈。`.text`、只读数据和可写数据分开，ELF 没有把代码段标成 RWX。ELF 标志本身只是装载信息；这时还没有[物理内存保护（Physical Memory Protection，PMP）](/terms/#pmp)或页表来强制运行时的 W^X 权限。
 
 关键实现分布在：
 
@@ -110,7 +110,7 @@ LOAD  ... 0x0000000080002000 ... RW
 
 ## 从 `_start` 到 `main`
 
-QEMU `virt` 的 `-bios none` 并不表示 CPU 直接从我们写的 `_start` 开始；QEMU 仍通过内建的 reset stub 跳到 DRAM 中的 ELF 入口。第一课已用 GDB 验证入口是 `0x80000000`。第二课沿用这个入口，但入口函数现在要先满足 C ABI 的运行条件。
+QEMU `virt` 的 `-bios none` 并不表示[中央处理器（Central Processing Unit，CPU）](/terms/#cpu)直接从我们写的 `_start` 开始；QEMU 仍通过内建的 reset stub 跳到[动态随机存取存储器（Dynamic Random-Access Memory，DRAM）](/terms/#dram)中的 ELF 入口。第一课已用 GDB 验证入口是 `0x80000000`。第二课沿用这个入口，但入口函数现在要先满足 C ABI 的运行条件。
 
 启动汇编的顺序是：
 
@@ -126,7 +126,7 @@ _start
 
 `gp` 指向 linker script 中的 `__global_pointer$`。本课为简化代码生成使用 `-msmall-data-limit=0`，所以当前 C 代码不会依赖 small-data 区的 GP-relative 访问；仍在入口设置 `gp`，是为了把启动环境的职责讲清楚。`sp` 和 `gp` 是 ABI 约定的一部分，不是某个 C 编译器的临时偏好。
 
-UART 驱动直接轮询 QEMU `virt` 的 16550-compatible UART0：基址 `0x10000000`，LSR 在偏移 5，`0x20` 表示发送保持寄存器可写，THR 在偏移 0。寄存器指针声明为 `volatile`，使每次状态读取和字符写入都保留为实际 MMIO 访问。换成真实板卡时，地址、UART 型号、时钟和 pinmux 都必须重新核实。
+UART 驱动直接轮询 QEMU `virt` 的 16550-compatible UART0：基址 `0x10000000`，[线路状态寄存器（Line Status Register，LSR）](/terms/#lsr)在偏移 5，`0x20` 表示[发送保持寄存器（Transmit Holding Register，THR）](/terms/#thr)可写，THR 在偏移 0。寄存器指针声明为 `volatile`，使每次状态读取和字符写入都保留为实际 MMIO 访问。换成真实板卡时，地址、UART 型号、时钟和 pinmux 都必须重新核实。
 
 ## 运行测试
 

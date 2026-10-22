@@ -14,12 +14,12 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 ## 第一部分：让 CPU 执行我们的第一段代码
 
 - ☑ [01. 一条命令背后：搭建可复现的 RISC-V 实验环境](/posts/environment-and-first-entry/)
-- ☑ [02. 没有 main 之前：启动汇编、C 运行环境与串口 Hello World](/posts/c-runtime-uart-hello/)
-- ☑ [03. 内核不必由模拟器直接装好：从 virtio 磁盘加载 kernel 和 shell](/posts/virtio-bootloader-from-disk/)
+- ☑ [02. 没有 main 之前：启动汇编、C 运行环境与串口（Universal Asynchronous Receiver-Transmitter，UART）Hello World](/posts/c-runtime-uart-hello/)
+- ☑ [03. 内核不必由模拟器直接装好：从 Virtual I/O Device（VIRTIO）磁盘加载 kernel 和 shell](/posts/virtio-bootloader-from-disk/)
 
 ## 第二部分：从裸机程序长成一个小内核
 
-- ☐ 04. 从 M-mode 到 S-mode，再到 U-mode
+- ☐ 04. 从[机器模式（Machine mode，M-mode）](/terms/#m-mode)到[监管者模式（Supervisor mode，S-mode）](/terms/#s-mode)，再到[用户模式（User mode，U-mode）](/terms/#u-mode)
 - ☐ 05. 给应用一套最小接口：syscall、mini-libc 与 heap
 - ☐ 06. 让多个程序交替前进：定时器、上下文切换与进程生命周期
 - ☐ 07. 第二个 hart：并行、共享状态与锁
@@ -47,9 +47,10 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 
 ## 这套路线怎么学
 
-每篇都围绕一个问题、一段可以观察到的结果和一套可复现验收展开。代码仓库按课程标签固定状态，文章记录环境、命令、输出和本课范围。QEMU 通过只证明当前虚拟平台配置通过，不等于 OS 已移植，也不替代真实硬件验收；系列会把模拟器 bring-up、OS 服务和真机验收分开说明。
+每篇都围绕一个问题、一段可以观察到的结果和一套可复现验收展开。代码仓库按课程标签固定状态，文章记录环境、命令、输出和本课范围。[QEMU（Quick Emulator，快速仿真器）](/terms/#qemu)通过只证明当前虚拟平台配置通过，不等于[操作系统（Operating System，OS）](/terms/#os)已移植，也不替代真实硬件验收；系列会把模拟器 bring-up、OS 服务和真机验收分开说明。
 
-我把这当作 AI 辅助的费曼学习法：让 agent 协助拆小问题、实现和解释；我再检查代码与 diff，预测测试结果，实际运行，并尝试用自己的话讲清楚控制流和数据布局。AI 的回答不是验收标准，能复现、能解释、测试证据对得上，才算学会。
+我把这当作[人工智能（Artificial Intelligence，AI）](/terms/#ai)辅助的费曼学习法：让 agent 协助拆小问题、实现和解释；我再检查代码与 diff，预测测试结果，实际运行，并尝试用自己的话讲清楚控制流和数据布局。AI 的回答不是验收标准，能复现、能解释、测试证据对得上，才算学会。
 
 - [阅读序篇：为什么要重新学一次操作系统](/posts/why-this-series/)
+- [查术语：RISC-V、OS 与裸机实验](/terms/)
 - [查看代码仓库](https://github.com/xueliangliang/riscv-hello)
