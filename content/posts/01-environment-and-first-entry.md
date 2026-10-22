@@ -26,7 +26,7 @@ PASS: RISC-V ELF entry and UART output verified.
 
 最后一行由宿主测试脚本输出；第一行才是 guest 里执行的汇编写到 UART 的内容。
 
-这证明 QEMU 按 ELF 入口启动了我们的代码，并且代码访问到了预期的虚拟 UART。它不证明我们已经拥有 C 运行时、特权级切换、trap、中断、文件系统，更不证明代码能在任意真实开发板上直接启动。
+本课的结论只覆盖 `lesson-01` ELF 在当前 QEMU virt 配置下的入口和串口验收。整个系列的进度与硬件验证范围统一见[系列总览](/series/)。
 
 ## 实验环境
 
@@ -193,7 +193,7 @@ PASS: RISC-V ELF entry and UART output verified.
 
 `start.S` 的 `_start` 使用 PC-relative `la` 找到字符串，用 `0x10000000` 作为本课固定的 QEMU virt UART0 地址，然后轮询 UART line-status register 的 transmit-holding-register-empty 位。只有发送器可接收时才写 THR；写完整个字符串后，把通过码写到 `0x00100000` 的 QEMU test device，使自动化测试能够正常结束。
 
-`linker.ld` 把 ELF 的单个 RX `PT_LOAD` 程序段放到 `0x80000000`，并把入口符号设为 `_start`。本课没有 RW 段、BSS、通用 startup、C `main`、trap handler、allocator、shell 或操作系统。下一课再加入栈/BSS 初始化和最小 C 执行环境。
+`linker.ld` 把 ELF 的单个 RX `PT_LOAD` 程序段放到 `0x80000000`，并把入口符号设为 `_start`。本课只包含汇编入口和串口输出；下一课会加入栈/BSS 初始化、分离的 ELF 段和 C `main`。
 
 这些地址和 UART 寄存器行为来自 QEMU `virt` 平台，不是 RISC-V ISA 对所有开发板规定的通用地址。后续换真实板时必须重新核对该板的内存映射、UART 类型、时钟与 pinmux，不能把 `0x10000000` 写死为 RISC-V 通用常量。
 
@@ -227,7 +227,7 @@ info registers pc a0 a1
 
 此时可以看到 CPU 到达 `_start` 的 ELF 地址。退出 GDB 后用 Ctrl-C 结束被暂停的 QEMU。
 
-## 本课验收与边界
+## 本课验收
 
 完成条件：
 
@@ -237,7 +237,7 @@ info registers pc a0 a1
 - `make test` 捕获到 guest 串口输出并正常退出；
 - 知道输出来自 guest 汇编，而不是宿主脚本伪造的文字。
 
-尚未实现：C 运行环境、用户态、trap/中断、调度、文件系统、从真实板卡启动。QEMU 成功只说明这份 ELF 在当前 QEMU virt 配置下能运行，不能代替真实开发板验证。
+下一课在这个入口上设置栈、清零 BSS 并进入 C `main`：[第 02 课](/posts/c-runtime-uart-hello/)。
 
 ## 代码版本
 

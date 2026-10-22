@@ -193,7 +193,7 @@ main:   pc = 0x80000116, sp = 0x80006000, gp = 0x80002800
 - `make test-lesson02` 捕获 guest UART 行并确认 QEMU 正常退出；
 - GDB 能分别停在 `_start` 和 `main`，并观察到 `sp`/`gp` 的变化。
 
-尚未实现：标准 C 库、格式化输出、异常/中断、用户态、驱动框架和 OS。这里的 UART 地址属于 QEMU `virt` 平台，不是 RISC-V ISA 对所有板卡的统一规定。
+这里的 UART 地址只适用于 QEMU `virt`，不是 RISC-V 通用地址；系列总体范围与真机验证路线见[系列总览](/series/)。
 
 ## 代码版本
 
