@@ -103,6 +103,30 @@ BSS 是可执行文件中存放零初始化/未显式初始化数据的一类区
 
 ## 权限、设备与调试
 
+### CSR
+
+Control and Status Register（CSR，控制与状态寄存器）：RISC-V 中用于读取状态和控制处理器行为的一类寄存器。访问所需的最低特权级由寄存器编码与架构规则决定；低权限访问受限寄存器会触发异常。它不是普通 RAM 变量。
+
+规范：[RISC-V CSR 地址与访问权限](https://docs.riscv.org/reference/isa/v20260120/priv/priv-csrs.html)。
+
+### trap
+
+Trap（陷入/异常入口）：执行过程中因异常或中断转入处理入口的过程。本系列第 04、05 课先处理同步异常：`ecall` 和非法指令。硬件记录原因、地址和来源状态，软件负责保存通用寄存器、安排处理栈和恢复现场。
+
+规范：[RISC-V Supervisor-Level ISA](https://docs.riscv.org/reference/isa/v20260120/priv/supervisor.html)。
+
+### syscall
+
+System call（syscall，系统调用）：用户程序请求内核服务的受控入口。RISC-V 的 `ecall` 提供产生环境调用异常的指令，具体请求编号、参数和返回值由系统调用 ABI 另行定义，不能只看到 `ecall` 就认为与 Linux 兼容。
+
+背景：[Wikipedia：System call](https://en.wikipedia.org/wiki/System_call)；本系列第 05 课的接口见代码仓库 `lessons/05/abi.h` 和该课 README。
+
+### heap
+
+Heap（堆）：用于动态分配对象的一块内存。本系列第 05 课先做 bump allocator（顺序推进分配器），按对齐后的请求大小向前移动游标；容量固定、失败不消耗空间、不支持释放。它在用户态操作已预留内存，不是向内核申请新页的系统调用。
+
+背景：[Wikipedia：Memory management](https://en.wikipedia.org/wiki/Memory_management)。
+
 ### M-mode
 
 Machine mode（机器模式）是 RISC-V 的机器级特权模式。

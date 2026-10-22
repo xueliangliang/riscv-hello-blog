@@ -19,8 +19,8 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 
 ## 第二部分：从裸机程序长成一个小内核
 
-- ☐ 04. 从[机器模式（Machine mode，M-mode）](/terms/#m-mode)到[监管者模式（Supervisor mode，S-mode）](/terms/#s-mode)，再到[用户模式（User mode，U-mode）](/terms/#u-mode)
-- ☐ 05. 给应用一套最小接口：syscall、mini-libc 与 heap
+- ☑ [04. 从 M-mode 到 S-mode，再到 U-mode：让一次异常证明权限边界](/posts/machine-supervisor-user-traps/)
+- ☑ [05. 给应用一套最小接口：syscall、mini-libc 与 heap](/posts/syscall-mini-libc-heap/)
 - ☐ 06. 让多个程序交替前进：定时器、上下文切换与进程生命周期
 - ☐ 07. 第二个 hart：并行、共享状态与锁
 - ☐ 08. 从轮询终端到交互式 shell
