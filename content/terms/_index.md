@@ -139,6 +139,48 @@ Heap（堆）：用于动态分配对象的一块内存。本系列第 05 课先
 
 背景：[Wikipedia：Memory management](https://en.wikipedia.org/wiki/Memory_management)。
 
+### scheduler
+
+Scheduler（调度器）：根据任务状态和调度策略，决定接下来在哪个执行资源上运行哪个任务。可运行、正在运行、睡眠、已退出但未回收是不同状态；一次中断并不必然导致切换任务。
+
+背景：[Wikipedia：Scheduling](https://en.wikipedia.org/wiki/Scheduling_(computing))。
+
+### PID
+
+Process Identifier（PID，进程标识）：用于引用一个具体进程实例的标识。它不一定等于进程表下标，更不等于 hart 编号。槽位复用时还需要防止旧标识误指向新实例；具体编码由本课程接口定义。
+
+背景：[Wikipedia：Process identifier](https://en.wikipedia.org/wiki/Process_identifier)。
+
+### hart
+
+Hardware thread（硬件线程，hart）：RISC-V 架构中的独立指令执行线程，拥有自己的寄存器和特权状态。它是任务使用的执行资源，不是进程槽，也不保证与实体芯片的物理核心一一对应。
+
+参考：[RISC-V 非特权架构导论](https://docs.riscv.org/reference/isa/v20260120/unpriv/intro.html)。
+
+### spinlock
+
+Spinlock（自旋锁）：通过原子操作竞争、等待时反复检查的一类锁。它适合短临界区；持锁等待串口输入或睡眠会妨碍其他执行者推进。互斥与内存发布顺序都需要明确约定，`volatile` 本身不能替代它们。
+
+背景：[Wikipedia：Spinlock](https://en.wikipedia.org/wiki/Spinlock)。
+
+### PLIC
+
+Platform-Level Interrupt Controller（PLIC，平台级中断控制器）：将平台设备的外部中断请求按优先级、使能和目标上下文送往 hart。它的 claim/complete 流程与 Sstc 定时器的比较值更新不是同一条路径。
+
+规范：[RISC-V PLIC 规范](https://github.com/riscv/riscv-plic-spec)。
+
+### IRQ
+
+Interrupt Request（IRQ，中断请求）：设备或中断源请求处理器处理事件的信号或编号。具体源编号、控制器路由与使能条件由平台决定，不能把某台虚拟机的编号当成整个指令集的常量。
+
+背景：[Wikipedia：Interrupt request](https://en.wikipedia.org/wiki/Interrupt_request)。
+
+### ring-buffer
+
+Ring buffer（环形缓冲区）：在固定容量数组中让读写位置回绕的缓冲结构。它需要明确满/空条件、生产者与消费者的同步，以及容量耗尽后的行为；有限缓冲本身不是流控。
+
+背景：[Wikipedia：Circular buffer](https://en.wikipedia.org/wiki/Circular_buffer)。
+
 ### M-mode
 
 Machine mode（机器模式）是 RISC-V 的机器级特权模式。
