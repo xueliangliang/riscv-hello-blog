@@ -34,5 +34,6 @@ The initial upload is already present in S3. For later changes, run the build, s
 - `infra/cloudfront-directory-index.js` maps Hugo pretty URLs to their `index.html` objects. The distribution returns the generated `/404.html` for missing paths.
 - The `LL` monogram favicon is in `static/favicon.svg` and is reused in the site header.
 - Article comments use giscus with the blog repository's `Announcements` Discussion category and `pathname` mapping; commenters sign in with GitHub.
+- Pageviews are measured with Google Analytics 4 (`gtag.js`). The measurement ID lives in `hugo.toml` under `[services.googleAnalytics]` and is rendered by `layouts/_default/baseof.html`; the tag appears once in every page head, including `404.html`. GA4 sets its own cookies, so add a disclosure or consent step if you need one for your audience.
 
 Do not make the S3 bucket public or change the CloudFront origin to the S3 website endpoint; that would bypass the current OAC setup.
