@@ -19,6 +19,9 @@ category = "Announcements"
 categoryId = "DIC_kwDOVTFrls4DJU3f"
 mapping = "pathname"
 
+[services.googleAnalytics]
+ID = "G-7L7KCWSYK1"
+
 [permalinks]
 posts = "/posts/:slug/"
 
