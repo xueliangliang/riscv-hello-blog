@@ -163,6 +163,30 @@ Spinlock（自旋锁）：通过原子操作竞争、等待时反复检查的一
 
 背景：[Wikipedia：Spinlock](https://en.wikipedia.org/wiki/Spinlock)。
 
+### SMP
+
+Symmetric Multiprocessing（SMP，对称多处理）：多个处理器执行资源在共享内存环境中由同一操作系统管理的组织方式。具备多个 hart，不等于已经实现负载均衡、任务迁移或可扩展的调度器。
+
+背景：[Wikipedia：Symmetric multiprocessing](https://en.wikipedia.org/wiki/Symmetric_multiprocessing)。
+
+### TCG
+
+Tiny Code Generator（TCG，微型代码生成器）：QEMU 的动态代码翻译后端。多线程 TCG 可让多个虚拟 CPU 使用不同的主机执行线程；这仍是仿真执行，不是被仿真芯片的真实硬件吞吐。
+
+参考：[QEMU：Multi-threaded TCG](https://www.qemu.org/docs/master/devel/multi-thread-tcg.html)。
+
+### MSIP
+
+Machine Software Interrupt Pending（MSIP，机器软件中断挂起位）：RISC-V 机器软件中断的挂起状态，对应的内存映射寄存器可以用于跨 hart 通知。课程中的具体寄存器地址属于 QEMU virt 平台；把它作为轮询启动握手，不等于已经实现核间中断处理服务。
+
+规范：[RISC-V Machine-Level ISA](https://docs.riscv.org/reference/isa/v20260120/priv/machine.html)。
+
+### WFI
+
+Wait for Interrupt（WFI，等待中断指令）：允许处理器等待可处理事件的特权架构指令。软件不能把它当成绝不提前返回的保证，恢复后仍需要检查等待条件；是否实际省电取决于实现。
+
+规范：[RISC-V Machine-Level ISA：Wait for Interrupt](https://docs.riscv.org/reference/isa/v20260120/priv/machine.html)。
+
 ### PLIC
 
 Platform-Level Interrupt Controller（PLIC，平台级中断控制器）：将平台设备的外部中断请求按优先级、使能和目标上下文送往 hart。它的 claim/complete 流程与 Sstc 定时器的比较值更新不是同一条路径。
@@ -180,6 +204,36 @@ Interrupt Request（IRQ，中断请求）：设备或中断源请求处理器处
 Ring buffer（环形缓冲区）：在固定容量数组中让读写位置回绕的缓冲结构。它需要明确满/空条件、生产者与消费者的同步，以及容量耗尽后的行为；有限缓冲本身不是流控。
 
 背景：[Wikipedia：Circular buffer](https://en.wikipedia.org/wiki/Circular_buffer)。
+
+### DTB
+
+Devicetree Blob（DTB，设备树二进制）：设备树数据的扁平二进制编码，常用于启动时向内核描述硬件。它记录某个平台的设备地址、中断连接和属性，不是 CPU 指令集对所有平台的统一地址约定。
+
+规范：[Devicetree Specification：Flattened Devicetree Format](https://github.com/devicetree-org/devicetree-specification/blob/main/source/chapter5-flattened-format.rst)。
+
+### FIFO
+
+First In, First Out（FIFO，先进先出）：先写入的数据先取出的队列顺序。UART 的硬件接收 FIFO 与内核软件环形缓冲是不同层次，容量、溢出和可观察计数不能混为一谈。
+
+背景：[Wikipedia：FIFO](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))。
+
+### DLAB
+
+Divisor Latch Access Bit（DLAB，除数锁存访问位）：16550 串口线控制寄存器中的控制位，决定部分偏移访问普通收发/中断寄存器，还是波特率除数锁存器。课程初始化先清它，再访问接收数据和中断使能。
+
+实现参考：[QEMU v10.2.1：serial.c](https://github.com/qemu/qemu/blob/v10.2.1/hw/char/serial.c)。
+
+### ASCII
+
+American Standard Code for Information Interchange（ASCII，美国信息交换标准代码）：常见的字符编码标准。本课 shell 只编辑可打印 ASCII 字节，不把这个最小编辑器描述为 Unicode 终端。
+
+背景：[Wikipedia：ASCII](https://en.wikipedia.org/wiki/ASCII)。
+
+### CRLF
+
+Carriage Return / Line Feed（CR/LF，回车/换行）：两个不同的控制字符。CRLF 是它们连续出现的形式；逐字节读取时也应保持跨读取的状态，避免把一组 CRLF 当成两次命令提交。
+
+背景：[Wikipedia：Newline](https://en.wikipedia.org/wiki/Newline)。
 
 ### M-mode
 

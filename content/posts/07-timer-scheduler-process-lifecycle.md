@@ -209,4 +209,4 @@ PASS: GDB observed A timer trap -> B frame -> B SP/sepc at sret.
 4. 为什么退出后不立即把槽标为 `FREE`？旧 PID 如何避免误指新实例？
 5. 只把命令行改成 `-smp 2`，哪些从启动栈开始的假设就不成立了？
 
-下一篇增加第二个 hart，先解决启动与共享状态发布，再处理锁、任务归属和远程终止；全系列安排见[总览](/series/)。
+[下一篇增加第二个 hart](/posts/second-hart-shared-state-locks/)，先解决启动与共享状态发布，再处理锁、任务归属和远程终止；全系列安排见[总览](/series/)。
