@@ -57,6 +57,44 @@ Wikipedia 链接作为入门背景阅读；涉及 ABI、指令语义、ELF 装�
 
 背景：[Wikipedia：Logical block addressing](https://en.wikipedia.org/wiki/Logical_block_addressing)；virtio 设备请求的具体协议见 [VirtIO 规范](https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html)。
 
+## 文件与持久化
+
+### FS
+
+文件系统（File System，FS）：约定文件名、逻辑长度、数据位置及访问规则，并把相关元数据保存到存储介质的组织方式。块设备能读写扇区，不代表已经有文件系统。
+
+背景：[Wikipedia：File system](https://en.wikipedia.org/wiki/File_system)。本系列具体磁盘格式以各课固定版本的格式说明为准。
+
+### EOF
+
+文件结束位置（End of File，EOF）。本课读取接口以逻辑长度为边界；当前游标到达末尾时读取返回零字节。EOF 不是存进文件的一个特殊字符，也不等于文件预留物理区段的末尾。
+
+背景：[Wikipedia：End-of-file](https://en.wikipedia.org/wiki/End-of-file)。
+
+### handle
+
+句柄（handle）：内核交给调用者、用来引用一条打开记录的标识。文件目录记录文件本身，打开记录还包含游标、权限和所有者等访问状态；同一文件和一次打开不是同一个概念。具体编码与失效规则属于本课接口，不默认等同于 POSIX 文件描述符。
+
+背景：[Wikipedia：Handle](https://en.wikipedia.org/wiki/Handle_(computing))。
+
+### extent
+
+连续区段（extent）：分配给文件的一段连续存储空间。本系列最小文件系统用固定大小区段降低实现复杂度；预留容量与逻辑文件长度不同，固定区段也会限制增长和空间利用率。
+
+背景：[Wikipedia：Extent](https://en.wikipedia.org/wiki/Extent_(file_systems))。
+
+### DMA
+
+直接内存访问（Direct Memory Access，DMA）：设备通过约定的内存地址读写缓冲区，不由 CPU 一字节一字节代为搬运。本系列 virtio 描述符记录 guest 物理地址；地址有效期、访问方向、内存顺序和完成后再复用都属于驱动合同。QEMU 中能工作不等于真机缓存一致性、IOMMU 和总线约束已经处理。
+
+背景：[Wikipedia：Direct memory access](https://en.wikipedia.org/wiki/Direct_memory_access)。
+
+### FLUSH
+
+刷新设备写缓存的操作，flush 是普通英文词而非缩写。本课的 `VIRTIO_BLK_T_FLUSH` 是真实块请求，需要协商相应特性并核对完成状态；处理器内存屏障不是设备刷新请求。一次刷新完成不自动使多个扇区的文件更新具有事务原子性。
+
+规范：[VirtIO 1.2 的块设备与写缓存语义](https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html)。
+
 ## 可执行文件与调用约定
 
 ### ELF
