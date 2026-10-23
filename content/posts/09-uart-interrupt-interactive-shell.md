@@ -246,4 +246,4 @@ PASS: GDB real idle UART IRQ -> blocked read wake -> U return sp=0x80408ed0 tp=0
 5. 为什么必须检查编辑后的 `echo:` 输出，而不是串口回显？
 6. 环形缓冲溢出以后，为什么要补一个新换行再测恢复？
 
-下一步把程序和数据放到真正可管理的文件结构里，学习重启以后哪些内容还能留下来。[系列总览](/series/)继续记录已完成和计划中的内容。
+[下一篇把程序和数据放到真正可管理的文件结构里](/posts/block-device-minimal-filesystem/)，学习重启以后哪些内容还能留下来。[系列总览](/series/)继续记录已完成和计划中的内容。
