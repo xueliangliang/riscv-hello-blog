@@ -22,7 +22,7 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 - ☑ [04. 从 M-mode 到 S-mode，再到 U-mode：让一次异常证明权限边界](/posts/machine-supervisor-user-traps/)
 - ☑ [05. 给应用一套最小接口：syscall、mini-libc 与 heap](/posts/syscall-mini-libc-heap/)
 - ☑ [06. 程序被打断以后：中断、保存现场与原路返回](/posts/interrupt-save-restore-resume/)
-- ☐ 07. 让多个程序交替前进：定时器、上下文切换与进程生命周期
+- ☑ [07. 让多个程序交替前进：定时器、上下文切换与进程生命周期](/posts/timer-scheduler-process-lifecycle/)
 - ☐ 08. 第二个 hart：并行、共享状态与锁
 - ☐ 09. 从轮询终端到交互式 shell
 
