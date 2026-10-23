@@ -229,4 +229,4 @@ PASS: GDB hart=1 timer restoration, user tp, own SP/sscratch, unlocked sret and 
 5. `kill` 返回 1 以后，调用者还不能假设什么？
 6. 8000 次正确更新，为什么不是双核性能提升的证明？
 
-下一篇把等待串口字符接入任务状态与唤醒。届时必须重新审查空闲时中断怎样到达，不能在这把全局锁里忙等输入。其余安排见[系列总览](/series/)。
+[下一篇把等待串口字符接入任务状态与唤醒](/posts/uart-interrupt-interactive-shell/)。届时必须重新审查空闲时中断怎样到达，不能在这把全局锁里忙等输入。其余安排见[系列总览](/series/)。
