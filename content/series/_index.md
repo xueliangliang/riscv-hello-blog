@@ -30,7 +30,7 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 
 - ☑ [10. 块设备到最小文件系统：先把数据放对位置](/posts/block-device-minimal-filesystem/)
 - ☑ [11. 文件变多、内容变长：独立实现 B+ 树文件系统](/posts/bplus-tree-filesystem/)
-- ☐ 12. 写到一半就重启：给 B+FS 加 redo journal
+- ☑ [12. 写到一半就重启：给 B+FS 加 redo journal](/posts/redo-journal-crash-recovery/)
 
 ## 第四部分：让系统自己生成和加载程序
 
