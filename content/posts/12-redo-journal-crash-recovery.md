@@ -4,7 +4,7 @@ date = 2026-10-29T13:52:00+08:00
 slug = "redo-journal-crash-recovery"
 description = "用完整扇区 after-image、严格刷新顺序与可重复重放，把正常重启能读回推进到有明确假设的崩溃恢复，并区分模拟器故障点与设备持久性模型。"
 tags = ["RISC-V", "文件系统", "日志", "崩溃恢复"]
-draft = true
+draft = false
 +++
 
 ## 上一课的保存成功，为什么还不够
@@ -17,15 +17,15 @@ draft = true
 
 **一次正常重启验证的是已经完成的保存；恢复协议要回答的是尚未完成时怎么办。**
 
-本稿仍在实现与独立验收阶段。以下说明恢复合同、候选布局与观察路径；固定版本与最终门禁结果会在验收后补齐，未完成前不发布。预留固定提交位置如下：
+本课固定标签为 `lesson-12`，对应提交如下。实现与复现说明见[第 12 课代码目录](https://github.com/xueliangliang/riscv-hello/tree/lesson-12/lessons/12)及 [README.md](https://github.com/xueliangliang/riscv-hello/blob/lesson-12/lessons/12/README.md)。
 
 ```text
-LESSON12_COMMIT_PENDING
+9883e30618417c57f9aff5ec434f99cef5fc6fdb
 ```
 
 ## 固定版本与复现入口
 
-本课标签将在审查通过后固定为 `lesson-12`。工具链沿用[第 01 课](/posts/environment-and-first-entry/)，另外需要一个宿主 C 编译器供持久性模型编译真实文件系统代码；默认命令为 `cc`，可通过 `HOSTCC` 指定。
+工具链沿用[第 01 课](/posts/environment-and-first-entry/)，另外需要一个宿主 C 编译器供持久性模型编译真实文件系统代码；默认命令为 `cc`，可通过 `HOSTCC` 指定。
 
 ```sh
 git clone https://github.com/xueliangliang/riscv-hello.git
@@ -43,7 +43,7 @@ make run-lesson12
 
 ## 日志放在哪里，保护哪些字节
 
-`BPTFS12` 使用独立格式身份，不直接修改 `BPTFS11` 的磁盘。候选实现保留 8 MiB 设备与原有 home 几何，把日志放进不重叠的预留尾部；完整字节合同见 [FORMAT.md](https://github.com/xueliangliang/riscv-hello/blob/lesson-12/lessons/12/FORMAT.md)。下面的[逻辑块寻址（Logical Block Addressing，LBA）](/terms/#lba)以 512 字节扇区为单位。
+`BPTFS12` 使用独立格式身份，不直接修改 `BPTFS11` 的磁盘。本课保留 8 MiB 设备与原有 home 几何，把日志放进不重叠的预留尾部；完整字节合同见 [FORMAT.md](https://github.com/xueliangliang/riscv-hello/blob/lesson-12/lessons/12/FORMAT.md)。下面的[逻辑块寻址（Logical Block Addressing，LBA）](/terms/#lba)以 512 字节扇区为单位。
 
 | LBA 区间 | 用途 |
 |---|---|
@@ -241,7 +241,7 @@ flowchart LR
 
 ## 归档复跑看到的边界
 
-当前归档的本课门禁已经真实执行过。最终标签仍待独立审查完成；下面的运行统计不代替该门禁。
+固定提交已通过独立规格审查和质量审查；父级另在该提交的新归档中执行累计 `make all test inspect` 与第 07–12 课 GDB 门禁，全部成功。以下统计来自实际执行，而不是从测试代码推算。
 
 八种修改分别覆盖触发分裂的创建、游标覆盖、追加、缩短、删除、实际数据整理、替换打开与增长截断。它们调用同一份 C 文件系统接口；宿主参考模型另外计算预期字节，不从客体的 PASS 字符串推断文件内容。
 
