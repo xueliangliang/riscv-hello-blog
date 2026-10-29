@@ -119,6 +119,36 @@ B-plus tree（B+ 树）：以较大扇出缩短查找路径的一类有序树；
 
 规范：[VirtIO 1.2 的块设备与写缓存语义](https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html)。
 
+### journal
+
+恢复日志（journal）：保存恢复依据的结构，不是面向读者的运行日志。redo journal 保存足以安装已提交结果的信息；恢复是否重放、何时可以复用日志，取决于明确的提交记录、刷新顺序和格式验证。数据日志与仅元数据日志的保护范围不同。
+
+背景：[Wikipedia：Journaling file system](https://en.wikipedia.org/wiki/Journaling_file_system)；机制参考：[Linux 内核 ext4 journal 文档](https://docs.kernel.org/filesystems/ext4/journal.html)。本系列自行定义格式，不承诺兼容 ext4。
+
+### WAL
+
+预写日志（Write-Ahead Logging，WAL）：依赖日志恢复的正式数据修改，必须在相应日志恢复依据已经持久化以后，才允许覆盖正式位置。具体提交标记、设备缓存合同和事务边界由实现定义；不是一种通用可互换的磁盘格式。
+
+参考：[PostgreSQL 17：Write-Ahead Logging](https://www.postgresql.org/docs/17/wal-intro.html)。
+
+### after-image {#after-image}
+
+修改后镜像（after-image）：记录某个目标块或扇区修改后应有的完整字节。本系列 redo journal 重放安装这份目标状态，不是重新执行一次追加操作；重复安装同一份镜像不会把同一内容追加两遍。
+
+相关机制见 [xv6 日志实现](https://github.com/mit-pdos/xv6-riscv/blob/e93dabeb98431235c6e1a101cb96c73c923fdbc4/kernel/log.c)；具体粒度与校验规则以本课格式为准。
+
+### checkpoint
+
+检查点安装（checkpoint）：本课日志语境中，把已提交的修改后镜像安装到正式位置，并在确认正式位置持久化之后，清理和复用日志。它不是保存一份内存快照，也不意味着任意位置停止执行都能忽略设备刷新顺序。
+
+相关机制见 [Linux 内核 ext4 journal 文档](https://docs.kernel.org/filesystems/ext4/journal.html)。
+
+### idempotence {#idempotence}
+
+幂等（idempotence）：一次或多次执行同一操作，最终具有相同的目标效果。本课恢复重复安装相同扇区镜像，不会重复增加逻辑文件长度；它不意味着第二次可以不校验，也不意味着没有设备错误。
+
+背景：[Wikipedia：Idempotence](https://en.wikipedia.org/wiki/Idempotence)。
+
 ## 可执行文件与调用约定
 
 ### ELF
