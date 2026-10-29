@@ -4,7 +4,7 @@ date = 2026-10-29T11:45:00+08:00
 slug = "bplus-tree-filesystem"
 description = "把文件名索引、块分配与文件内容分开，用 B+ 树、两张位图和数据块链取代固定目录与固定区段，并验证分裂、回收、整理和重启。"
 tags = ["RISC-V", "QEMU", "B+树", "文件系统"]
-draft = true
+draft = false
 +++
 
 ## 上一课已经能保存文件，为什么还要重写
@@ -25,7 +25,7 @@ draft = true
 本课固定标签为 `lesson-11`，对应提交：
 
 ```text
-LESSON11_COMMIT_PENDING
+53a1603d4febd9d04bfdb997160099a0f7e7b914
 ```
 
 工具准备沿用[第 01 课](/posts/environment-and-first-entry/)。从累计仓库复现：

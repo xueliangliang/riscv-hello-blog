@@ -328,4 +328,5 @@ python3 lessons/10/decode.py build/lesson10/evidence-patterns.img
 
 - [VirtIO 1.2 规范](https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html)：第 2 章设备通用结构、第 4.2 节[内存映射输入输出（Memory-Mapped Input/Output，MMIO）](/terms/#mmio)传输、第 5.2 节块设备，特别是特性协商、缓存语义和请求完成状态。
 - [QEMU v10.2.1 的 virtio-blk 实现](https://github.com/qemu/qemu/blob/v10.2.1/hw/block/virtio-blk.c)：`virtio_blk_handle_flush` 最终调用块后端刷新；它不是普通写请求的别名。
-- [系列总览](/series/)：下一课再讨论固定目录和固定区段为什么会限制文件数量、空间利用和内容增长。
+- [第 11 课：独立实现 B+ 树文件系统](/posts/bplus-tree-filesystem/)：讨论固定目录和固定区段为什么会限制文件数量、空间利用和内容增长。
+- [系列总览](/series/)：后续课程与共同的范围边界。
