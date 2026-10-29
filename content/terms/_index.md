@@ -79,9 +79,33 @@ Wikipedia 链接作为入门背景阅读；涉及 ABI、指令语义、ELF 装�
 
 ### extent
 
-连续区段（extent）：分配给文件的一段连续存储空间。本系列最小文件系统用固定大小区段降低实现复杂度；预留容量与逻辑文件长度不同，固定区段也会限制增长和空间利用率。
+连续区段（extent）：分配给文件的一段连续存储空间。第 10 课的最小文件系统用固定大小区段降低实现复杂度；预留容量与逻辑文件长度不同，固定区段也会限制增长和空间利用率。
 
 背景：[Wikipedia：Extent](https://en.wikipedia.org/wiki/Extent_(file_systems))。
+
+### B+ 树 {#bplus-tree}
+
+B-plus tree（B+ 树）：以较大扇出缩短查找路径的一类有序树；文件记录放在叶子，内部页保存分隔键与孩子位置，叶子后继支持顺序枚举。本课把它用作平面文件名索引，不等于实现目录层级，也不等于直接使用数据库的并发或恢复协议。
+
+背景：[Wikipedia：B+ tree](https://en.wikipedia.org/wiki/B%2B_tree)；实现参考：[PostgreSQL 的 B-Tree Structure](https://www.postgresql.org/docs/17/btree.html#BTREE-STRUCTURE)。本系列的磁盘格式由各课独立定义。
+
+### bitmap
+
+位图（bitmap）：用每一位记录某个编号资源是否分配。节点位图与数据位图可以管理不同大小、不同编号空间的资源，不能仅凭位图下标直接推断设备扇区位置。格式校验还要核对位图与真实引用关系，而不只是数出有多少位为一。
+
+背景：[Wikipedia：Bit array](https://en.wikipedia.org/wiki/Bit_array)。
+
+### block chain {#block-chain}
+
+数据块链（block chain）：文件记录指向首个块，各块再记录下一个块的编号，直到链尾标记。这里是文件内容的组织方式，不是区块链系统；记录链指针的空间不能再算作用户有效载荷。合法编号仍可能形成环或被两个文件共享，需要单独检查。
+
+背景：[Wikipedia：File allocation table](https://en.wikipedia.org/wiki/File_Allocation_Table)介绍了另一种用链接组织文件块的方式；第 11 课把 next 存在哪里、链尾如何表示，以该课格式说明为准。
+
+### defrag
+
+空间整理（defragmentation，常简称 defrag）：搬动仍在使用的数据，使空闲或占用分布更连续。移动字节以后还要改引用位置、块链和分配记录；整理前后内容应相同。数据区整理不自动意味着目录树合并、元数据压缩、性能提升或崩溃原子性。
+
+背景：[Wikipedia：Defragmentation](https://en.wikipedia.org/wiki/Defragmentation)。
 
 ### DMA
 
