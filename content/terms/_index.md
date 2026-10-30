@@ -211,6 +211,18 @@ BSS 是可执行文件中存放零初始化/未显式初始化数据的一类区
 
 背景：[Wikipedia：.bss](https://en.wikipedia.org/wiki/.bss)；初始化示例见 [GNU ld 文档](https://sourceware.org/binutils/docs/ld/Output-Section-LMA.html)。
 
+## 编译器与源码输入
+
+### AST {#ast}
+
+抽象语法树（Abstract Syntax Tree，AST）：用节点及其组合关系表达源码的语法结构，而不是保留字符的平铺顺序。例如加法的右侧可以是一整棵乘法表达式，后续名称检查、类型检查和代码生成再依据这种结构工作。它是一种表示方式，不意味着编译器必须使用某个外部框架，也不等同于运行时解释源码。
+
+参考：[LLVM 官方教程：Parser and AST](https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl02.html)。
+
+### self-hosting {#self-hosting}
+
+编译器自举（self-hosting）：编译器能够处理自身实现所用的语言，并实际参与构建它自己。在宿主机上交叉构建一个编译器，再让它在 guest 里编译其他程序，只证明编译过程已经能在 guest 运行；若还不能编译自身实现，就不能据此宣称完成自举。
+
 ## 权限、设备与调试
 
 ### CSR
