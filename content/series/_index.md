@@ -36,7 +36,7 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 
 - ☑ [13. 文件里的字节怎样成为程序：加载器与动态 math.dll](/posts/program-loader-dynamic-math-module/)
 - ☑ [14. 在 console 粘贴源码，再在 OS 里编译它](/posts/guest-source-paste-native-compiler/)
-- ☐ 15. 第一个工具链闭环：源码→编译→执行→动态调用→重启
+- ☑ [15. 把工具链闭环接完整：浮点、运行时与动态调用](/posts/soft-float-runtime-dynamic-toolchain/)
 
 ## 第五部分：离开 QEMU，点亮真实开发板
 
