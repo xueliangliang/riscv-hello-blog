@@ -1,10 +1,10 @@
 +++
 title = "15. 把工具链闭环接完整：浮点、运行时与动态调用"
-date = 2026-10-30T19:04:26+08:00
+date = 2026-10-31T01:49:55+08:00
 slug = "soft-float-runtime-dynamic-toolchain"
 description = "在 guest 内编译浮点表达式，借助版本化运行时调用真正的 math.dll，再用不改可执行文件的动态重绑定与冷启动证明闭环。"
 tags = ["RISC-V", "编译器", "软浮点", "运行时", "动态模块"]
-draft = true
+draft = false
 +++
 
 ## 整数程序已经会运行，这次补齐浮点与动态数学
@@ -15,11 +15,15 @@ draft = true
 
 最终要能回答的是：`double` 的一个加法怎样变成当前处理器能执行的指令；`ceil(x)` 怎样在程序运行时到另一个文件里找到代码；换掉模块以后，为什么同一份可执行文件可以产生不同结果。
 
-本稿仍在最终独立验收阶段。下述接口、命令和串口结果已按候选代码实测；最终冻结版本与审查结论尚待补齐。未完成前不发布。
+本课代码已冻结为 [`lesson-15`](https://github.com/xueliangliang/riscv-hello/tree/lesson-15)，精确提交为 [`ed5462b9b0f6100bfce290f950a5cb1a7fedeaf2`](https://github.com/xueliangliang/riscv-hello/commit/ed5462b9b0f6100bfce290f950a5cb1a7fedeaf2)。独立功能规格审查和代码质量审查均通过；父级另在精确提交的全新归档中完成累计构建、测试、检查、07–15 课真实调试器门禁，以及失败证据判定器复验。
 
-```text
-LESSON15_COMMIT_PENDING
+```sh
+git clone --branch lesson-15 https://github.com/xueliangliang/riscv-hello.git riscv-lesson15
+cd riscv-lesson15
+git rev-parse HEAD
 ```
+
+最后一条命令应输出上述完整提交。以下语言、布局、命令与实测结果都对应这份冻结代码，而不是会继续变化的 `main`。
 
 ## 先跑一次完整示例
 
@@ -32,7 +36,7 @@ make lesson15
 make run-lesson15
 ```
 
-打开仓库中的 `lessons/15/demo.c`。在 guest 的 `15>` 提示符下输入 `fappend demo.c <<END15`，粘贴该文件全文，再输入单独一行 `END15`。这是串口原始文本收集，不是让宿主编译器提前生成演示程序。
+打开仓库中的 [`lessons/15/demo.c`](https://github.com/xueliangliang/riscv-hello/blob/ed5462b9b0f6100bfce290f950a5cb1a7fedeaf2/lessons/15/demo.c)。在 guest 的 `15>` 提示符下输入 `fappend demo.c <<END15`，粘贴该文件全文，再输入单独一行 `END15`。这是串口原始文本收集，不是让宿主编译器提前生成演示程序。
 
 `fappend` 的语义仍然是追加；如果同名源码已经存在，先明确删除旧源码，再重新粘贴，不能把两份 `main` 拼在一起。运行中的持久磁盘也不会因重新构建而自动重置。
 
