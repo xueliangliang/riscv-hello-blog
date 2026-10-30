@@ -223,6 +223,28 @@ BSS 是可执行文件中存放零初始化/未显式初始化数据的一类区
 
 编译器自举（self-hosting）：编译器能够处理自身实现所用的语言，并实际参与构建它自己。在宿主机上交叉构建一个编译器，再让它在 guest 里编译其他程序，只证明编译过程已经能在 guest 运行；若还不能编译自身实现，就不能据此宣称完成自举。
 
+### binary64 {#binary64}
+
+二进制浮点格式 binary64：一种 64 位浮点表示，编码中包含符号、指数和有效数字字段，也为带符号零、无穷与 NaN 保留了表示。它描述值怎样编码，不规定函数必须通过浮点寄存器传参，也不意味着整数加法可以直接计算这些位型。本系列选用的软浮点辅助函数使用这一格式。
+
+参考：[固定提交的 LLVM 浮点表示辅助定义](https://github.com/llvm/llvm-project/blob/cd708029e0b2869e80abe31ddb175f7c35361f90/compiler-rt/lib/builtins/fp_lib.h)。
+
+### 软浮点 {#soft-float}
+
+软浮点（software floating point）：通过软件辅助函数完成浮点运算，在本系列的限定目标中由整数指令实现。不应把它与“浮点参数采用整数寄存器传递的 ABI”混为一谈；调用约定与处理器是否执行浮点指令，需要分别检查。
+
+参考：[GCC 软浮点辅助函数](https://gcc.gnu.org/onlinedocs/gccint/Soft-float-library-routines.html)；[RISC-V 调用约定](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/9b2767e2a8851709608c4e1452998ad232d6278b/riscv-cc.adoc)。
+
+### 运行时 {#runtime}
+
+运行时（runtime）：在这里指为生成的机器码提供打印、数值辅助函数和模块解析等支撑的一组代码及接口约定。它可以随产物一起保存，不必是另一个常驻进程；调用运行时函数也不等于解释执行源码。格式版本、函数签名、入口与状态内存的生命周期都属于双方需要遵守的合同。
+
+### NaN {#nan}
+
+非数值（Not a Number，NaN）：浮点格式中区别于有限数与无穷的一类特殊编码。检查计算结果时，应分别约定 NaN 的分类、比较、符号与载荷策略，而不是把它的原始位型当作有符号整数进行大小比较。
+
+参考：[固定提交的 LLVM 浮点比较辅助实现](https://github.com/llvm/llvm-project/blob/cd708029e0b2869e80abe31ddb175f7c35361f90/compiler-rt/lib/builtins/fp_compare_impl.inc)。
+
 ## 权限、设备与调试
 
 ### CSR
