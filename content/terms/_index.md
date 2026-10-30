@@ -459,6 +459,12 @@ Cyclic Redundancy Check（循环冗余校验，CRC）：为一段数据计算校
 
 背景：[Wikipedia：Cyclic redundancy check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)。
 
+### SHA-256 {#sha-256}
+
+安全散列算法（Secure Hash Algorithm，SHA）中的 256 位摘要算法：将文件等字节序列计算成固定长度的摘要。本系列同时比较完整字节和摘要，检查冷启动保存与动态模块替换实验中的可执行文件是否改变。摘要不是数字签名，也不证明文件来自可信作者。
+
+规范：[Secure Hash Standard，FIPS 180-4](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)。
+
 ### PTY
 
 Pseudoterminal（伪终端，PTY）：一对由内核提供的伪设备端点，让终端程序和另一个进程进行双向通信；本系列提到 PTY 测试时，是指程序在伪终端环境下运行。
