@@ -175,6 +175,24 @@ ELF 程序头中的可装载段类型。`p_filesz` 描述文件里有多少字�
 
 背景：[Wikipedia：Application binary interface](https://en.wikipedia.org/wiki/Application_binary_interface)；RISC-V 约定见 [RISC-V ELF psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc)。
 
+### PIC {#pic}
+
+位置无关代码（Position-Independent Code，PIC）：内部引用按约定编译，使代码不必依赖唯一的安装地址。不能把所有 PIC 都当成可以直接复制运行的字节；常见动态链接还需要地址表和重定位支持。本系列第 13 课把范围收窄为不需要运行时外部地址修补的有界平面模块，并用不同安装地址实际执行来补充构建检查。
+
+参考：[GCC Code Generation Options](https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html)。
+
+### DLL {#dll}
+
+动态链接库（Dynamic-Link Library，DLL）：程序可以通过动态装载机制取得其导出函数的库。这个名称常见于 Windows；本系列的 `math.dll` 只借用文件名，用的是自定义模块容器，不是 Windows 动态库兼容性声明，也不意味着有了通用 ELF 动态链接器。
+
+背景：[Microsoft：About Dynamic-Link Libraries](https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries)。
+
+### relocation {#relocation}
+
+重定位（relocation）：工具链或加载器根据地址布局修补代码或数据中的引用。链接时重定位与运行时重定位不是同一阶段；没有未解析外部符号，也不自动证明一个平面映像能在所有位置正确执行。本系列的有界模块通过构建检查和实际换址执行共同验证自己的位置无关合同。
+
+参考：[RISC-V ELF psABI](https://riscv-non-isa.github.io/riscv-elf-psabi-doc/)。
+
 ### `gp`
 
 RISC-V 整数寄存器的惯用名称：`gp` 是 global pointer（全局指针）。若编译结果使用 small-data 访问，启动代码必须按链接布局初始化它。
