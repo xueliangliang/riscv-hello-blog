@@ -4,7 +4,7 @@ date = 2026-10-30T12:02:49+08:00
 slug = "program-loader-dynamic-math-module"
 description = "把文件内容、程序入口、位置无关代码和带调用约定的符号查找接起来，并明确代码发布、卸载失效与双 hart 指令可见性的边界。"
 tags = ["RISC-V", "加载器", "动态模块", "ABI"]
-draft = true
+draft = false
 +++
 
 ## 文件已经存住了，为什么还不能执行
@@ -20,11 +20,29 @@ draft = true
 
 `math_test` 与 `math.dll` 因此不是同一个东西：前者是可以启动、退出和等待的应用，后者是被应用加载并调用的模块。
 
-本稿仍处于实现与独立验收阶段。下面先说明设计边界和验证方式；最终格式、接口、地址预算、实际串口记录与固定版本在验收后补齐，未完成前不发布。
+本课固定标签为 `lesson-13`，对应提交如下。实现与复现说明见[第 13 课代码目录](https://github.com/xueliangliang/riscv-hello/tree/lesson-13/lessons/13)、[格式合同](https://github.com/xueliangliang/riscv-hello/blob/lesson-13/lessons/13/FORMAT.md)及 [README](https://github.com/xueliangliang/riscv-hello/blob/lesson-13/lessons/13/README.md)。
 
 ```text
-LESSON13_COMMIT_PENDING
+c5b36a0bb4500e3b1be261bda87e4aeb84e2d0df
 ```
+
+## 固定版本与复现入口
+
+工具链沿用[第 01 课](/posts/environment-and-first-entry/)，另需宿主 C 编译器运行原生验证；本课不需要额外的 Python 包。
+
+```sh
+git clone https://github.com/xueliangliang/riscv-hello.git
+cd riscv-hello
+git switch --detach lesson-13
+git rev-parse HEAD
+make clean
+make all test inspect
+make test-lesson13-gdb
+make test-lesson13-evidence
+make run-lesson13
+```
+
+单独验收本课可以用 `make test-lesson13`。[GNU 调试器（GNU Debugger，GDB）](/terms/#gdb)门禁需要 `gdb-multiarch`。正常运行盘为 `state/lesson13/disk.img`，与可重建的 `build/lesson13/disk.img` 分开；构建、clean 和重启不重新安装默认文件。`make reset-lesson13` 则会**销毁本课保存盘的旧内容**，只应在明确需要重新开始时执行。
 
 ## 文件扩展名不负责建立执行环境
 
@@ -72,7 +90,7 @@ flowchart LR
 
 测试也不能只做一次成功启动：应覆盖活进程占用、尚未回收的退出记录、等待后的重新启动，以及文件应用与原有工作任务同时存在的情况。
 
-## 候选实现的实际格式与内存预算
+## 实际格式与内存预算
 
 目前实现把应用和模块明确分成两种容器：
 
@@ -160,11 +178,11 @@ RISC-V 的 `fence.i` 用于本 hart 的指令流同步，并不替其他 hart �
 
 同样重要的是负向路径：坏格式不能留下可运行的半份映像，越界指针不能因为“暂时还没用到”就被接受，失败读取不能泄漏文件句柄，未回收的进程不能被下一次加载覆盖。
 
-下面记录候选归档已经执行的结果；最终复现入口与固定版本仍待全部审查完成。当前设计图不是已执行验收的替代品。
+下面记录固定提交在新归档中已经执行的结果。设计图说明机制，不能代替实际运行。
 
 ### 已执行的父级归档复跑
 
-父级已在候选提交的新归档中执行累计 `make all test inspect`、第 07–13 课实际调试器门禁及本课证据门禁，均返回成功。独立规格复核已通过，质量审查仍在进行，因此暂不冻结标签。
+固定提交已通过独立规格与质量审查；父级另外在新归档中执行累计 `make all test inspect`、第 07–13 课实际调试器门禁及本课证据门禁，均返回成功。
 
 普通 shell 的这段实际串口摘录省略了调度审计与应用逐项测试行：
 
