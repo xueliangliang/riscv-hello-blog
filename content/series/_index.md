@@ -34,7 +34,7 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 
 ## 第四部分：让系统自己生成和加载程序
 
-- ☐ 13. 文件里的字节怎样成为程序：加载器与动态 math.dll
+- ☑ [13. 文件里的字节怎样成为程序：加载器与动态 math.dll](/posts/program-loader-dynamic-math-module/)
 - ☐ 14. 在 console 粘贴源码，再在 OS 里编译它
 - ☐ 15. 第一个工具链闭环：源码→编译→执行→动态调用→重启
 
