@@ -145,6 +145,84 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(len(cards), len(expected))
         self.assertEqual(page(self.site, '/series/').find('h1')[0].text(), 'RISC-V OS实验笔记')
 
+    def test_adsense_appears_once_in_production_heads_except_404(self):
+        config = tomllib.loads((ROOT / 'hugo.toml').read_text())['params']['adsense']
+        expected = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + config['client']
+        enabled = bool(config.get('enabled') and config.get('client'))
+        for path in self.site.rglob('*.html'):
+            with self.subTest(page=str(path.relative_to(self.site))):
+                document = Document(path.read_text()).root
+                scripts = [script for script in document.find('script')
+                           if 'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js' in script.attrs.get('src', '')]
+                self.assertEqual(len(scripts), 0 if path == self.site / '404.html' or not enabled else 1)
+                for script in scripts:
+                    self.assertIn(script, document.find('head')[0].find('script'))
+                    self.assertEqual(script.attrs['src'], expected)
+                    self.assertIn('async', script.attrs)
+                    self.assertEqual(script.attrs['crossorigin'], 'anonymous')
+
+    def test_adsense_disabled_and_nonproduction_builds_omit_the_script(self):
+        fixture = self.fixture()
+        config = fixture / 'hugo.toml'
+        original = config.read_text()
+        marker = '[params.adsense]\nenabled = true'
+        self.assertIn('[params.adsense]', original)
+        disabled = original.replace(marker, '[params.adsense]\nenabled = false')
+        self.assertFalse(tomllib.loads(disabled)['params']['adsense']['enabled'])
+        config.write_text(disabled)
+        build(fixture, fixture / 'disabled-site')
+        for path in (fixture / 'disabled-site').rglob('*.html'):
+            self.assertNotIn('pagead2.googlesyndication.com', path.read_text())
+        config.write_text(original.replace('[params.adsense]\nenabled = false', marker))
+        for environment in ['development', 'staging']:
+            destination = fixture / (environment + '-site')
+            result = subprocess.run(['hugo', '--minify', '--environment', environment,
+                                     '--source', str(fixture), '--destination', str(destination)],
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout)
+            for path in destination.rglob('*.html'):
+                self.assertNotIn('pagead2.googlesyndication.com', path.read_text())
+
+    def test_adsense_is_not_loaded_by_the_actual_preview_server(self):
+        import socket
+        import time
+        from urllib.error import URLError
+        from urllib.request import urlopen
+
+        fixture = self.fixture()
+        config = fixture / 'hugo.toml'
+        config.write_text(config.read_text().replace('[params.adsense]\nenabled = false', '[params.adsense]\nenabled = true'))
+        with socket.socket() as reservation:
+            reservation.bind(('127.0.0.1', 0))
+            port = reservation.getsockname()[1]
+        process = subprocess.Popen(['hugo', 'server', '--source', str(fixture),
+                                    '--bind', '127.0.0.1', '--port', str(port),
+                                    '--environment', 'production', '--disableLiveReload'],
+                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        try:
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline:
+                if process.poll() is not None:
+                    self.fail(process.communicate()[0])
+                try:
+                    with urlopen(f'http://127.0.0.1:{port}/', timeout=1) as response:
+                        self.assertEqual(response.status, 200)
+                        html = response.read().decode()
+                    break
+                except URLError:
+                    time.sleep(0.05)
+            else:
+                self.fail('Hugo preview server did not become ready')
+            self.assertIn('XLL技术笔记', html)
+            self.assertNotIn('pagead2.googlesyndication.com', html)
+        finally:
+            process.terminate()
+            try:
+                process.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.communicate(timeout=5)
+
     def test_analytics_comments_canonicals_and_feed_preserved(self):
         for post in self.posts:
             route = '/posts/' + post['slug'] + '/'

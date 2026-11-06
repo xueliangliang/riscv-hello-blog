@@ -32,6 +32,14 @@ Record the returned invalidation ID and wait for it with `aws cloudfront wait in
 
 For a new ordered-series chapter, its first production build lists it as pending confirmation. After that article is actually live and the invalidation completed, run `npm run post:confirm -- SLUG`. This performs a fresh build, compares the full live article bytes and updates only its confirmation metadata. Then rebuild, review a new dry run, and manually deploy the now-checked overview. The accepted article bytes must remain unchanged. Homepage, archives, topic lists, feeds and course links are generated; do not edit duplicate lists by hand. The workflow does not touch the separate prototype `BLOG_OUTLINE.md` or certify code/hardware acceptance.
 
+## Google AdSense
+
+The publisher client ID is configured under `[params.adsense]` in `hugo.toml`. The shared head inserts the supplied asynchronous AdSense script once per production content page, with `crossorigin="anonymous"`. Development/staging builds, `hugo server` (even with the production environment selected), and the 404 page omit it. Set `enabled = false` to disable it site-wide.
+
+This installs the site connection script, not a guaranteed ad placement or an account approval. Site review and Auto ads settings remain in the owner's AdSense account. See Google's [code placement guide](https://support.google.com/adsense/answer/9274516?hl=en). No ad units, ads.txt seller authorizations, consent banner, or privacy-policy claims are invented by this change. If the account asks for ads.txt or consent configuration, complete those separately using the actual account settings. For personalized ads to users in the EEA, UK and Switzerland, consult Google's [certified consent-management requirements](https://support.google.com/adsense/answer/13554116?hl=en) before enabling that delivery.
+
+Verify HTML and script attributes without repeatedly requesting live ads or clicking your own ads. Local browser checks block third-party requests. Script installation and the first real ad impression are separate acceptance steps.
+
 ## AWS layout
 
 - S3 bucket: `blog.xueliangliang.dev`, region `ap-southeast-1`.

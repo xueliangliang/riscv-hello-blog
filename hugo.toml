@@ -11,6 +11,10 @@ description = "记录系统、编程与工程实践：把技术问题变成可�
 author = "Xue Liangliang"
 blogRepositoryURL = "https://github.com/xueliangliang/riscv-hello-blog"
 
+[params.adsense]
+enabled = true
+client = "ca-pub-6049253401792044"
+
 [params.featured]
 page = "/posts/00-why-this-series"
 title = "序篇：为什么开始"

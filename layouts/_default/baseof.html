@@ -12,6 +12,11 @@
   <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ "index.xml" | relURL }}">
   <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  {{ with site.Params.adsense }}
+  {{ if and .enabled .client hugo.IsProduction (not hugo.IsServer) (ne $.Kind "404") }}
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ .client }}" crossorigin="anonymous"></script>
+  {{ end }}
+  {{ end }}
   {{ with site.Config.Services.GoogleAnalytics.ID }}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
   <script>
