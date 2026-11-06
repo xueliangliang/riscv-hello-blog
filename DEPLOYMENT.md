@@ -40,15 +40,27 @@ This installs the site connection script, not a guaranteed ad placement or an ac
 
 Verify HTML and script attributes without repeatedly requesting live ads or clicking your own ads. Local browser checks block third-party requests. Script installation and the first real ad impression are separate acceptance steps.
 
+## Root domain and canonical routing
+
+`xueliangliang.dev` is an HTTPS entry point, not a second copy of the blog. The existing CloudFront distribution accepts both the root domain and `blog.xueliangliang.dev`; an ACM certificate in `us-east-1` covers both names. Root-domain `A` and `AAAA` aliases point to that distribution. Existing `www` records are unrelated and are not changed by this setup.
+
+The viewer-request function `blog-xueliangliang-dev-canonical-routing`, sourced from `infra/cloudfront-directory-index.js`, returns a 301 from the root domain to `https://blog.xueliangliang.dev` before any directory-index rewriting. It preserves paths and encoded parameter values, sorts query names for deterministic output, and preserves repeated-value order. Redirect responses use a five-minute cache lifetime. HTTP first upgrades to HTTPS through the existing viewer protocol policy; HTTPS then redirects to the canonical blog origin. Blog requests retain the original directory/asset behavior and existing S3 OAC protection.
+
+Run `npm run test:routing` for the Node regression suite; it is also part of `npm run check`. Function changes require separate CloudFront deployment, not an S3 sync: upload to DEVELOPMENT, run native `test-function` events as well as local tests, publish LIVE, then associate using a freshly read distribution ETag. Local JavaScript property enumeration can differ from the CloudFront runtime, so test encoded and repeated query parameters in the actual service. Before creating root DNS aliases, wait for distribution deployment and verify the root hostname against a CloudFront address with normal TLS hostname validation (`curl --resolve`, never `-k`).
+
+Verify public A/AAAA answers, trusted root-domain TLS, the initial 301 and its Location, followed blog HTML containing the intended AdSense publisher ID, blog nested URLs/assets and a real missing-page 404. A working redirect enables crawling; it does not prove that AdSense verification or content review has succeeded. Root `/ads.txt` redirects to blog `/ads.txt`; no ads.txt content is implied or automatically created.
+
+For rollback, the original `blog-xueliangliang-dev-directory-index` function and original blog-only certificate remain available. A routing-only rollback can restore the old function association while keeping the new dual-name certificate. For a complete rollback, remove only the newly created root A/AAAA records, allow DNS caches to expire, and then remove the root alias/restore the original certificate as appropriate. Keep ACM validation CNAMEs for certificate renewal. Use current ETags and preserve unrelated settings; do not blindly overwrite future changes with an old full-distribution snapshot. The initial configuration, validation records and service test receipts are archived locally under ignored `build/apex-redirect/`.
+
 ## AWS layout
 
 - S3 bucket: `blog.xueliangliang.dev`, region `ap-southeast-1`.
 - The bucket is private, has Block Public Access enabled, and does not use S3 website hosting.
 - CloudFront distribution: `E1G5X9EHO4H6OU` (`d2fm8jrgsw0c4t.cloudfront.net`), Price Class 200.
 - CloudFront uses Origin Access Control (OAC); the bucket policy grants `s3:GetObject` only to this distribution.
-- ACM certificate for `blog.xueliangliang.dev` is in `us-east-1`.
-- Route 53 `A` and `AAAA` alias records point `blog.xueliangliang.dev` to CloudFront.
-- `infra/cloudfront-directory-index.js` maps Hugo pretty URLs to their `index.html` objects. The distribution returns the generated `/404.html` for missing paths.
+- The active ACM certificate in `us-east-1` covers `xueliangliang.dev` and `blog.xueliangliang.dev`.
+- Route 53 `A` and `AAAA` alias records point both root and blog hostnames to CloudFront.
+- `infra/cloudfront-directory-index.js` redirects the root domain and maps blog pretty URLs to their `index.html` objects. The distribution returns the generated `/404.html` for missing blog paths.
 - The `LL` monogram favicon is in `static/favicon.svg` and is reused in the site header.
 - Article comments use giscus with the blog repository's `Announcements` Discussion category and `pathname` mapping; commenters sign in with GitHub.
 - Pageviews are measured with Google Analytics 4 (`gtag.js`). The measurement ID lives in `hugo.toml` under `[services.googleAnalytics]` and is rendered by `layouts/_default/baseof.html`; the tag appears once in every page head, including `404.html`. GA4 sets its own cookies, so add a disclosure or consent step if you need one for your audience.
