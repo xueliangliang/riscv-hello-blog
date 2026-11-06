@@ -74,3 +74,8 @@ tags = ["操作系统", "RISC-V", "学习方法", "AI"]
 从[机器模式（Machine mode，M-mode）](/terms/#m-mode)到[用户模式（User mode，U-mode）](/terms/#u-mode)、调度、文件系统、编译器和真机移植仍在路线图上，不会因为标题出现在总览里就算已经完成。
 
 可以从[系列总览](/series/)查看每一篇的状态；每篇技术课都会给出对应代码标签、复现命令和实测验收。希望多年以后再回头看时，我不只记得操作系统有哪些原则，也能沿着代码和运行结果，把它们从头讲清楚。
+
+## 参考资料
+
+- [南京大学《操作系统原理》（2025）：01 — AI 时代的操作系统课](https://www.bilibili.com/en/video/BV1XZAbeqEyt)。
+- [《Operating Systems: Three Easy Pieces》（OSTEP）](https://pages.cs.wisc.edu/~remzi/OSTEP/)：围绕虚拟化、并发和持久化组织操作系统知识，可与本系列实验对照阅读。
