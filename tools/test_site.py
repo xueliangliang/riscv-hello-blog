@@ -99,6 +99,29 @@ class SiteTests(unittest.TestCase):
         self.assertNotIn('https://github.com/xueliangliang/riscv-hello',
                          [anchor.attrs.get('href') for anchor in home.find(css='site-nav')[0].find('a')])
 
+    def test_navigation_and_repository_locations_are_consistent(self):
+        def navigation(document):
+            menus = document.find(css='site-nav')
+            self.assertEqual(len(menus), 1)
+            return [(anchor.text(), anchor.attrs.get('href')) for anchor in menus[0].find('a')]
+
+        expected = navigation(page(self.site, '/'))
+        self.assertTrue(expected)
+        repositories = {series['code_repository_url'] for series in self.series.values()
+                        if series.get('code_repository_url')}
+        for path in self.site.rglob('*.html'):
+            with self.subTest(page=str(path.relative_to(self.site))):
+                document = Document(path.read_text()).root
+                self.assertEqual(navigation(document), expected)
+                for header in document.find('header'):
+                    self.assertFalse(repositories.intersection(anchor.attrs.get('href') for anchor in header.find('a')),
+                                     'Series repositories belong at the end, not in a page-specific header')
+        overview = page(self.site, '/series/')
+        repository = self.series['riscv-os']['code_repository_url']
+        links = [anchor for anchor in overview.find('a') if anchor.attrs.get('href') == repository]
+        self.assertEqual(len(links), 1)
+        self.assertIn(links[0], overview.find(css='article-end')[0].find('a'))
+
     def test_series_and_clickable_theme_labels_everywhere(self):
         for post in self.posts:
             route = '/posts/' + post['slug'] + '/'

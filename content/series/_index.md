@@ -40,4 +40,3 @@ description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过
 
 - [阅读序篇：为什么要重新学一次操作系统](/posts/why-this-series/)
 - [查术语：RISC-V、OS 与裸机实验](/terms/)
-- [查看代码仓库](https://github.com/xueliangliang/riscv-hello)
