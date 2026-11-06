@@ -1,0 +1,25 @@
+{{- $id := .Page.Params.series_id -}}
+{{- $series := index site.Data.series $id -}}
+{{- $partID := .Get "id" -}}
+{{- $parts := where $series.parts "id" $partID -}}
+{{- if ne (len $parts) 1 -}}{{ errorf "Unknown roadmap part %q for %q" $partID $id }}{{- end -}}
+{{- $part := index $parts 0 -}}
+{{- $posts := where (where site.RegularPages "Section" "posts") "Params.series_id" $id -}}
+{{- $posts = where $posts "Draft" false -}}
+<ul class="series-chapters">
+  {{- range seq $part.first $part.last -}}
+    {{- $order := . -}}
+    {{- $matches := where $posts "Params.series_order" $order -}}
+    {{- if gt (len $matches) 1 -}}{{ errorf "Duplicate series_order %d in %q" $order $id }}{{- end -}}
+    {{- with $matches -}}
+      {{- with index . 0 -}}
+        {{- $label := printf "%02d. %s" $order (replaceRE `^[0-9]+\.\s*` "" .LinkTitle) -}}
+        <li data-order="{{ $order }}" data-status="{{ if .Params.series_confirmed }}confirmed{{ else }}pending{{ end }}">{{ if .Params.series_confirmed }}☑{{ else }}☐{{ end }} <a href="{{ .RelPermalink }}">{{ $label }}</a>{{ if not .Params.series_confirmed }}（待上线确认）{{ end }}</li>
+      {{- end -}}
+    {{- else -}}
+      {{- $planned := index $series.planned (printf "%d" $order) -}}
+      {{- if not $planned -}}{{ errorf "Missing published post or planned title for %q order %d" $id $order }}{{- end -}}
+      <li data-order="{{ $order }}" data-status="planned">☐ {{ printf "%02d. %s" $order $planned }}</li>
+    {{- end -}}
+  {{- end -}}
+</ul>

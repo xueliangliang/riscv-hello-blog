@@ -4,6 +4,8 @@ date = 2026-10-30T13:56:00+08:00
 slug = "guest-source-paste-native-compiler"
 description = "把原始源码输入、词法语法检查与 RV64 代码生成接起来，让独立用户态编译器产出真正可装载的程序，并验证失败不会先破坏旧文件。"
 series_id = "riscv-os"
+series_order = 14
+series_confirmed = true
 tags = ["RISC-V", "编译器", "源码粘贴", "C子集"]
 draft = false
 +++

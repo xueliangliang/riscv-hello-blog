@@ -4,6 +4,8 @@ date = 2026-10-23T09:00:00+08:00
 slug = "timer-scheduler-process-lifecycle"
 description = "在中断保存现场的基础上恢复另一个任务的现场，区分抢占、睡眠、退出和回收，并以真实用户程序验证生命周期。"
 series_id = "riscv-os"
+series_order = 7
+series_confirmed = true
 tags = ["RISC-V", "QEMU", "调度", "进程"]
 draft = false
 +++

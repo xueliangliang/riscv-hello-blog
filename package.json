@@ -9,7 +9,15 @@
     "diagrams": "node tools/render-diagrams.mjs",
     "diagrams:check": "node tools/render-diagrams.mjs --check",
     "test:diagrams": "node --test tools/render-diagrams.test.mjs",
-    "test:site": "python3 tools/test_site.py"
+    "test:site": "python3 tools/test_site.py",
+    "test:workflow": "python3 tools/test_blog.py",
+    "post:new": "python3 tools/blog.py new",
+    "post:confirm": "python3 tools/blog.py confirm",
+    "validate": "python3 tools/blog.py validate",
+    "build": "python3 tools/blog.py build",
+    "artifact": "python3 tools/blog.py artifact",
+    "verify:browser": "node tools/verify_browser.mjs",
+    "check": "npm run validate && npm run test:site && npm run test:workflow && npm run test:diagrams && npm run diagrams:check"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "12.0.0"

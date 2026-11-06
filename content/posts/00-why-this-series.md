@@ -4,6 +4,8 @@ date = 2026-10-22T21:20:00+08:00
 description = "二十多年后，我想用 RISC-V、QEMU 和 AI 辅助实践，把当年只会背的操作系统概念重新走成一条可运行、可解释的路径。"
 slug = "why-this-series"
 series_id = "riscv-os"
+series_order = 0
+series_confirmed = true
 tags = ["操作系统", "RISC-V", "学习方法", "AI"]
 +++
 

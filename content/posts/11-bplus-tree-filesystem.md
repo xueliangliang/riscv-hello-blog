@@ -4,6 +4,8 @@ date = 2026-10-29T11:45:00+08:00
 slug = "bplus-tree-filesystem"
 description = "把文件名索引、块分配与文件内容分开，用 B+ 树、两张位图和数据块链取代固定目录与固定区段，并验证分裂、回收、整理和重启。"
 series_id = "riscv-os"
+series_order = 11
+series_confirmed = true
 tags = ["RISC-V", "QEMU", "B+树", "文件系统"]
 draft = false
 +++

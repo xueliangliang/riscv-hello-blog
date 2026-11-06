@@ -4,6 +4,8 @@ date = 2026-10-22T23:20:00+08:00
 slug = "interrupt-save-restore-resume"
 description = "先理解同一条程序流如何被定时器中断并恢复，再进入调度；用 Mermaid 时序图区分硬件动作、汇编保存和 C 处理。"
 series_id = "riscv-os"
+series_order = 6
+series_confirmed = true
 tags = ["RISC-V", "QEMU", "中断", "trap"]
 draft = false
 +++

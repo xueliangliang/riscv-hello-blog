@@ -1,0 +1,17 @@
+{{- $id := .Params.series_id -}}
+{{- $definition := index site.Data.series $id -}}
+{{- if and $id (not $definition.parts) -}}
+  {{- $posts := where (where site.RegularPages "Section" "posts") "Params.series_id" $id -}}
+  <div class="post-list">
+    {{ range $posts.ByDate.Reverse }}
+      <article class="post-card">
+        <div class="post-card-meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time></div>
+        <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
+        {{ with .Description }}<p>{{ . }}</p>{{ end }}
+        {{ partial "article-labels.html" . }}
+      </article>
+    {{ else }}
+      <p class="empty-state">这个系列还没有已发布的文章。</p>
+    {{ end }}
+  </div>
+{{- end -}}

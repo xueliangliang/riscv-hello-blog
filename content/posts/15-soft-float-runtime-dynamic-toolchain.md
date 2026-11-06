@@ -4,6 +4,8 @@ date = 2026-10-31T01:49:55+08:00
 slug = "soft-float-runtime-dynamic-toolchain"
 description = "在 guest 内编译浮点表达式，借助版本化运行时调用真正的 math.dll，再用不改可执行文件的动态重绑定与冷启动证明闭环。"
 series_id = "riscv-os"
+series_order = 15
+series_confirmed = true
 tags = ["RISC-V", "编译器", "软浮点", "运行时", "动态模块"]
 draft = false
 +++

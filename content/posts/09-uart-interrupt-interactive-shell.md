@@ -4,6 +4,8 @@ date = 2026-10-23T09:02:00+08:00
 slug = "uart-interrupt-interactive-shell"
 description = "把串口收到字节、内核缓冲与用户命令行拆开，让 shell 等待输入时其他任务仍能运行，并实际验证编辑、历史和命令执行。"
 series_id = "riscv-os"
+series_order = 9
+series_confirmed = true
 tags = ["RISC-V", "QEMU", "UART", "shell"]
 draft = false
 +++

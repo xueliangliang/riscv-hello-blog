@@ -4,6 +4,8 @@ date = 2026-10-23T14:45:00+08:00
 slug = "block-device-minimal-filesystem"
 description = "把扇区读写接到文件名、长度与句柄，区分内存顺序与设备 FLUSH，用重启和独立磁盘检查验证数据真的留了下来。"
 series_id = "riscv-os"
+series_order = 10
+series_confirmed = true
 tags = ["RISC-V", "QEMU", "VirtIO", "文件系统"]
 draft = false
 +++

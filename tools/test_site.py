@@ -2,6 +2,7 @@
 """Build real Hugo output and check branding, navigation and taxonomy links."""
 
 from html.parser import HTMLParser
+from datetime import datetime
 from pathlib import Path
 import os
 import shutil
@@ -77,8 +78,11 @@ class SiteTests(unittest.TestCase):
         cls.addClassCleanup(cls.temporary.cleanup)
         cls.site = Path(cls.temporary.name) / 'site'
         build(ROOT, cls.site)
-        cls.posts = [tomllib.loads(path.read_text().split('+++', 2)[1])
-                     for path in (ROOT / 'content/posts').glob('*.md')]
+        metadata = [tomllib.loads(path.read_text().split('+++', 2)[1])
+                    for path in (ROOT / 'content/posts').glob('*.md') if path.name != '_index.md']
+        cls.posts = [post for post in metadata if not post.get('draft', False)
+                     and post['date'] <= datetime.now().astimezone()]
+        cls.series = tomllib.loads((ROOT / 'data/series.toml').read_text())
 
     def test_home_brand_feature_and_chronological_order(self):
         home = page(self.site, '/')
@@ -99,18 +103,23 @@ class SiteTests(unittest.TestCase):
         for post in self.posts:
             route = '/posts/' + post['slug'] + '/'
             detail = page(self.site, route)
-            self.assertEqual(detail.find(css='series-tag')[0].find('a')[0].attrs['href'], '/series/')
-            self.assertEqual(detail.find(css='series-tag')[0].text(), 'RISC-V OS实验笔记')
+            series = self.series.get(post.get('series_id') or '')
+            if series:
+                self.assertEqual(detail.find(css='series-tag')[0].find('a')[0].attrs['href'], series['page'].rstrip('/') + '/')
+                self.assertEqual(detail.find(css='series-tag')[0].text(), series['title'])
+            else:
+                self.assertFalse(detail.find(css='series-tag'))
             self.assertTrue(detail.find('title')[0].text().endswith(' · XLL技术笔记'))
-            labels = detail.find(css='tag-list')[0].find('a')
-            self.assertEqual(len(labels), len(post['tags']) + 1)
-            for label in labels[1:]:
+            lists = detail.find(css='tag-list')
+            labels = lists[0].find('a') if lists else []
+            self.assertEqual(len(labels), len(post.get('tags', [])) + bool(series))
+            for label in labels[1:] if series else labels:
                 target = page(self.site, label.attrs['href'])
                 self.assertIn(route, [anchor.attrs.get('href') for anchor in target.find('a')])
         for route in ['/', '/posts/', '/tags/risc-v/']:
             cards = page(self.site, route).find(css='post-card')
-            self.assertEqual(len(cards), len(self.posts))
-            self.assertTrue(all(card.find(css='series-tag') for card in cards))
+            expected = self.posts if route != '/tags/risc-v/' else [post for post in self.posts if 'risc-v' in [tag.casefold() for tag in post.get('tags', [])]]
+            self.assertEqual(len(cards), len(expected))
         self.assertEqual(page(self.site, '/series/').find('h1')[0].text(), 'RISC-V OS实验笔记')
 
     def test_analytics_comments_canonicals_and_feed_preserved(self):
@@ -129,7 +138,7 @@ class SiteTests(unittest.TestCase):
     def fixture(self):
         destination = Path(self.temporary.name) / self._testMethodName
         shutil.copytree(ROOT, destination,
-                        ignore=shutil.ignore_patterns('.git', 'node_modules', 'public', 'resources', '__pycache__', '.hugo_build.lock'))
+                        ignore=shutil.ignore_patterns('.git', 'node_modules', 'public', 'resources', 'build', '__pycache__', '.hugo_build.lock'))
         return destination
 
     def test_other_series_and_standalone_notes_use_same_templates(self):

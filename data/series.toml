@@ -2,3 +2,41 @@
 title = "RISC-V OS实验笔记"
 page = "/series"
 code_repository_url = "https://github.com/xueliangliang/riscv-hello"
+
+# Only the curriculum is configured here. Published titles and links come from posts.
+[[riscv-os.parts]]
+id = "prologue"
+first = 0
+last = 0
+
+[[riscv-os.parts]]
+id = "entry"
+first = 1
+last = 3
+
+[[riscv-os.parts]]
+id = "kernel"
+first = 4
+last = 9
+
+[[riscv-os.parts]]
+id = "storage"
+first = 10
+last = 12
+
+[[riscv-os.parts]]
+id = "toolchain"
+first = 13
+last = 15
+
+[[riscv-os.parts]]
+id = "hardware"
+first = 16
+last = 20
+
+[riscv-os.planned]
+"16" = "选板先看启动条件：制定一份移植合同"
+"17" = "第一次真机执行：自己的串口输出与 LED"
+"18" = "真正把内核运行起来：定时器、中断、用户态与 shell"
+"19" = "从镜像到真实介质：存储驱动、B+FS 与 journal"
+"20" = "终章：在自己的开发板上编译并运行 demo.c"

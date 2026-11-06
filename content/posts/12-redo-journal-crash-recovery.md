@@ -4,6 +4,8 @@ date = 2026-10-29T13:52:00+08:00
 slug = "redo-journal-crash-recovery"
 description = "用完整扇区 after-image、严格刷新顺序与可重复重放，把正常重启能读回推进到有明确假设的崩溃恢复，并区分模拟器故障点与设备持久性模型。"
 series_id = "riscv-os"
+series_order = 12
+series_confirmed = true
 tags = ["RISC-V", "文件系统", "日志", "崩溃恢复"]
 draft = false
 +++

@@ -2,3 +2,5 @@
 /resources/_gen/
 .hugo_build.lock
 /node_modules/
+/build/
+__pycache__/

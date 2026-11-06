@@ -4,6 +4,8 @@ date = 2026-10-30T12:02:49+08:00
 slug = "program-loader-dynamic-math-module"
 description = "把文件内容、程序入口、位置无关代码和带调用约定的符号查找接起来，并明确代码发布、卸载失效与双 hart 指令可见性的边界。"
 series_id = "riscv-os"
+series_order = 13
+series_confirmed = true
 tags = ["RISC-V", "加载器", "动态模块", "ABI"]
 draft = false
 +++
