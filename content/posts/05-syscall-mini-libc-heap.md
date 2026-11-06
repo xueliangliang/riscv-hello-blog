@@ -3,6 +3,7 @@ title = "05. 给应用一套最小接口：syscall、mini-libc 与 heap"
 date = 2026-10-22T23:01:00+08:00
 description = "让用户 C 程序通过明确的系统调用 ABI 输出和退出，实现必要的字符串/内存函数，再验证一个 16 KiB 有界堆的对齐、溢出和耗尽。"
 slug = "syscall-mini-libc-heap"
+series_id = "riscv-os"
 tags = ["RISC-V", "QEMU", "syscall", "C 运行时"]
 +++
 

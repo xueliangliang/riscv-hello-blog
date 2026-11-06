@@ -1,0 +1,8 @@
+{{- $series := partial "series-meta.html" . -}}
+{{- $tags := .GetTerms "tags" -}}
+{{- if or $series $tags }}
+<ul class="tag-list" aria-label="所属系列与文章标签">
+  {{ with $series }}<li class="series-tag"><a href="{{ .overview.RelPermalink }}">{{ .title }}</a></li>{{ end }}
+  {{ range $tags }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+</ul>
+{{- end -}}

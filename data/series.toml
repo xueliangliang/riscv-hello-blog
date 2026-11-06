@@ -1,0 +1,4 @@
+[riscv-os]
+title = "RISC-V OS实验笔记"
+page = "/series"
+code_repository_url = "https://github.com/xueliangliang/riscv-hello"

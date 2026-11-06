@@ -3,6 +3,7 @@ title = "没有 main 之前：启动汇编、C 运行环境与串口 Hello World
 date = 2026-10-22T19:00:00+08:00
 description = "从 QEMU virt 的 ELF 入口设置 gp、栈和 BSS，再进入 freestanding C main，通过 MMIO UART 输出。"
 slug = "c-runtime-uart-hello"
+series_id = "riscv-os"
 tags = ["RISC-V", "QEMU", "裸机", "C 运行时"]
 +++
 

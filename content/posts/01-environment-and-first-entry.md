@@ -3,6 +3,7 @@ title = "一条命令背后：搭建 RISC-V 实验环境，并进入第一条指
 date = 2026-10-22T00:00:00+08:00
 description = "用 Ubuntu 交叉工具链和 QEMU virt，从 ELF 入口进入 RISC-V M-mode，并输出第一行 UART。"
 slug = "environment-and-first-entry"
+series_id = "riscv-os"
 tags = ["RISC-V", "QEMU", "裸机"]
 +++
 

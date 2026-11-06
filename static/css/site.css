@@ -54,6 +54,9 @@ a:hover { color: var(--accent); }
 .hero-copy { max-width: 620px; margin: 24px 0 0; color: var(--muted); font-size: clamp(1rem, 2vw, 1.18rem); }
 .hero-link { display: inline-flex; align-items: center; gap: 12px; margin-top: 32px; padding: 11px 17px; border-radius: 7px; background: var(--accent-strong); color: white; font-size: .92rem; font-weight: 680; text-decoration: none; }
 .hero-link:hover { background: var(--ink); color: white; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 32px; }
+.hero-actions .hero-link { margin-top: 0; }
+.hero-secondary { font-size: .92rem; font-weight: 680; }
 .hero-index { position: absolute; right: 5%; bottom: 4%; color: rgb(8 127 114 / 9%); font-size: clamp(2.8rem, 8vw, 6.5rem); font-weight: 850; line-height: .9; letter-spacing: -.08em; text-align: right; pointer-events: none; }
 
 .post-section { margin-top: 76px; }
@@ -71,6 +74,9 @@ a:hover { color: var(--accent); }
 .post-card p { margin: 0; color: var(--muted); font-size: .94rem; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0 0; padding: 0; list-style: none; }
 .tag-list li { padding: 3px 9px; border-radius: 999px; background: var(--soft-accent); color: var(--accent-strong); font-size: .74rem; }
+.tag-list a { color: inherit; text-decoration: none; }
+.tag-list a:hover { text-decoration: underline; }
+.tag-list .series-tag { box-shadow: inset 0 0 0 1px var(--accent); font-weight: 700; }
 .empty-state { grid-column: 1 / -1; padding: 24px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); }
 .principles { margin-top: 58px; padding: 28px 32px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--soft-accent) 55%, transparent); }
 .principles h2 { max-width: 660px; }

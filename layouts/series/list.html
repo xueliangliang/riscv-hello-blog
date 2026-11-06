@@ -2,9 +2,12 @@
 <section class="article">
   <header class="article-header">
     <a class="back-link" href="{{ site.Home.RelPermalink }}">← 首页</a>
-    <p class="eyebrow">SERIES ROADMAP · RISC-V</p>
+    <p class="eyebrow">SERIES ROADMAP</p>
     <h1>{{ .Title }}</h1>
     {{ with .Description }}<p class="article-lead">{{ . }}</p>{{ end }}
+    {{ with partial "series-meta.html" . }}
+      {{ with .codeURL }}<p><a href="{{ . }}" target="_blank" rel="noopener noreferrer">系列代码仓库 ↗</a></p>{{ end }}
+    {{ end }}
   </header>
 
   {{ with .TableOfContents }}

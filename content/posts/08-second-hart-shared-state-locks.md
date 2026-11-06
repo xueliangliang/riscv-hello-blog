@@ -3,6 +3,7 @@ title = "08. 第二个 hart：并行、共享状态与锁"
 date = 2026-10-23T09:01:00+08:00
 slug = "second-hart-shared-state-locks"
 description = "从两个硬件线程的真实启动与内存发布开始，为每个 hart 配置独立内核栈和中断环境，再验证任务归属与共享状态。"
+series_id = "riscv-os"
 tags = ["RISC-V", "QEMU", "多核", "并发"]
 draft = false
 +++

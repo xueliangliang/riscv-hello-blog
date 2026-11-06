@@ -1,5 +1,6 @@
 +++
-title = "系列总览：从第一条指令到真实开发板"
+title = "RISC-V OS实验笔记"
+series_id = "riscv-os"
 description = "一张持续更新的路线图：从 RISC-V 裸机入口，经过 OS、文件系统和工具链，走到真实开发板。"
 +++
 

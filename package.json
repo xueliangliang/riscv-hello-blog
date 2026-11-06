@@ -8,7 +8,8 @@
   "scripts": {
     "diagrams": "node tools/render-diagrams.mjs",
     "diagrams:check": "node tools/render-diagrams.mjs --check",
-    "test:diagrams": "node --test tools/render-diagrams.test.mjs"
+    "test:diagrams": "node --test tools/render-diagrams.test.mjs",
+    "test:site": "python3 tools/test_site.py"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "12.0.0"

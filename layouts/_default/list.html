@@ -9,6 +9,7 @@
         <div class="post-card-meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time></div>
         <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
         {{ with .Description }}<p>{{ . }}</p>{{ end }}
+        {{ partial "article-labels.html" . }}
       </article>
     {{ else }}
       <p class="empty-state">这里暂时还没有文章。</p>

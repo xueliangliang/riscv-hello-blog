@@ -3,6 +3,7 @@ title = "04. 从 M-mode 到 S-mode，再到 U-mode：让一次异常证明权限
 date = 2026-10-22T23:00:00+08:00
 description = "延续磁盘启动链，用 mret/sret 进入用户态，通过 ecall、非法 CSR 访问、trap 上下文和 GDB 证明实际特权级。"
 slug = "machine-supervisor-user-traps"
+series_id = "riscv-os"
 tags = ["RISC-V", "QEMU", "特权级", "trap"]
 +++
 

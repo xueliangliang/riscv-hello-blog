@@ -3,6 +3,7 @@ title = "内核不必由模拟器直接装好：从 virtio 磁盘加载 kernel �
 date = 2026-10-22T19:10:00+08:00
 description = "在 QEMU virt 上实现最小 modern virtio-mmio 块设备轮询，用启动记录把 kernel 与 shell payload 从 LBA 搬到 RAM，再验证跳转。"
 slug = "virtio-bootloader-from-disk"
+series_id = "riscv-os"
 tags = ["RISC-V", "QEMU", "bootloader", "virtio"]
 +++
 

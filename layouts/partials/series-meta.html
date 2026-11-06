@@ -1,0 +1,14 @@
+{{- $result := dict -}}
+{{- with .Params.series_id -}}
+  {{- $id := . -}}
+  {{- with index site.Data.series $id -}}
+    {{- $overview := site.GetPage .page -}}
+    {{- if not $overview -}}
+      {{- errorf "Series %q has no overview page at %q" $id .page -}}
+    {{- end -}}
+    {{- $result = dict "title" .title "overview" $overview "codeURL" .code_repository_url -}}
+  {{- else -}}
+    {{- errorf "Unknown series_id %q: define it in data/series.toml" $id -}}
+  {{- end -}}
+{{- end -}}
+{{- return $result -}}
