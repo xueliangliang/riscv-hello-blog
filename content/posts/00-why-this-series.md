@@ -78,4 +78,5 @@ tags = ["操作系统", "RISC-V", "学习方法", "AI"]
 ## 参考资料
 
 - [南京大学《操作系统原理》（2025）：01 — AI 时代的操作系统课](https://www.bilibili.com/en/video/BV1XZAbeqEyt)。
+- [循序渐进，学习开发一个 RISC-V 上的操作系统（汪辰，2021 春）](https://www.bilibili.com/en/video/BV1Q5411w7z5)。
 - [《Operating Systems: Three Easy Pieces》（OSTEP）](https://pages.cs.wisc.edu/~remzi/OSTEP/)：围绕虚拟化、并发和持久化组织操作系统知识，可与本系列实验对照阅读。
